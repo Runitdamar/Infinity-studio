@@ -1,0 +1,2468 @@
+<!DOCTYPE html>
+<!-- Infinity Studio v2.2 -->
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Infinity Studio</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;1,9..40,400&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0d1117;--surface:#161b22;--sage:#8b949e;--red:#e6a817;--white:#f0f6fc;--r40:2.5rem;--r24:1.5rem;--r16:1rem;--shadow:0 20px 50px -12px rgba(0,0,0,.5);--shadow-sm:0 8px 24px -4px rgba(0,0,0,.3)}
+html{scroll-behavior:smooth}
+body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--white);min-height:100vh;max-width:480px;margin:0 auto;overflow-x:hidden;padding-bottom:96px}
+::-webkit-scrollbar{width:0;height:0}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@keyframes blob{0%,100%{border-radius:60% 40% 55% 45%/50% 60% 40% 50%}50%{border-radius:40% 60% 45% 55%/60% 40% 60% 40%}}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
+@keyframes tick{0%{transform:scale(1)}50%{transform:scale(1.15)}100%{transform:scale(1)}}
+.page{display:none;animation:fadeUp .3s ease forwards}
+.page.active{display:block}
+.header{padding:52px 20px 14px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;background:linear-gradient(to bottom,var(--bg) 78%,transparent)}
+.h-eyebrow{font-size:10px;font-weight:700;color:var(--sage);text-transform:uppercase;letter-spacing:2.5px;margin-bottom:2px}
+.h-wordmark{font-size:26px;font-weight:900;color:var(--white);line-height:1;letter-spacing:-.5px}
+.h-wordmark span{color:var(--red)}
+.avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#c98f0a,#e6a817,#f0b429);border:2px solid rgba(230,168,23,.3);box-shadow:0 0 12px rgba(230,168,23,.25);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#0d1117;flex-shrink:0}
+.back-header{padding:52px 20px 14px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:50;background:linear-gradient(to bottom,var(--bg) 78%,transparent)}
+.back-btn{width:38px;height:38px;border-radius:50%;background:var(--surface);border:1px solid rgba(139,148,158,.25);display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;transition:all .2s;flex-shrink:0}
+.back-btn:hover{border-color:rgba(139,148,158,.5)}
+.back-title{font-size:20px;font-weight:900;color:var(--white)}
+.studios{padding:20px 20px 0;display:flex;flex-direction:column;gap:14px}
+.studio-card{background:var(--surface);border-radius:var(--r40);border:1px solid rgba(139,148,158,.2);padding:24px;cursor:pointer;transition:all .25s ease;position:relative;overflow:hidden;box-shadow:var(--shadow-sm)}
+.studio-card:hover{border-color:rgba(139,148,158,.4);transform:translateY(-3px);box-shadow:var(--shadow)}
+.sc-blob{position:absolute;top:-30px;right:-30px;width:140px;height:140px;animation:blob 10s ease-in-out infinite;pointer-events:none;border-radius:60% 40% 55% 45%/50% 60% 40% 50%}
+.sc-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;position:relative;z-index:1}
+.sc-icon{width:56px;height:56px;border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:24px;border:1px solid rgba(139,148,158,.15)}
+.sc-arrow{width:36px;height:36px;border-radius:50%;border:1.5px solid rgba(139,148,158,.25);display:flex;align-items:center;justify-content:center;font-size:15px;color:var(--sage);transition:all .2s}
+.studio-card:hover .sc-arrow{background:linear-gradient(135deg,#f0b429,#e6a817);border-color:var(--red);color:#0d1117}
+.sc-name{font-size:22px;font-weight:900;color:var(--white);margin-bottom:4px;position:relative;z-index:1;line-height:1}
+.sc-desc{font-size:13px;color:var(--sage);line-height:1.6;margin-bottom:18px;position:relative;z-index:1}
+.sc-pills{display:flex;gap:7px;flex-wrap:wrap;position:relative;z-index:1}
+.sc-pill{background:rgba(139,148,158,.1);border:1px solid rgba(139,148,158,.2);border-radius:100px;padding:4px 11px;font-size:11px;font-weight:700;color:var(--sage)}
+.quick-section{padding:24px 20px 0}
+.qs-label{font-size:10px;font-weight:700;color:var(--sage);text-transform:uppercase;letter-spacing:2px;margin-bottom:12px}
+.quick-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.qa{background:var(--surface);border:1px solid rgba(139,148,158,.2);border-radius:var(--r16);padding:14px 8px;display:flex;flex-direction:column;align-items:center;gap:7px;cursor:pointer;transition:all .2s;font-family:"DM Sans",sans-serif}
+.qa:hover{border-color:rgba(139,148,158,.45);transform:translateY(-2px)}
+.qa-icon{font-size:22px}
+.qa-lbl{font-size:10px;font-weight:800;color:var(--white);text-align:center;line-height:1.3}
+.section-block{padding:20px 20px 0}
+.sb-label{font-size:10px;font-weight:700;color:var(--sage);text-transform:uppercase;letter-spacing:2px;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.sb-label::after{content:"";flex:1;height:1px;background:rgba(139,148,158,.2)}
+.tool-row{background:var(--surface);border-radius:var(--r24);border:1px solid rgba(139,148,158,.2);padding:14px 16px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:all .2s;margin-bottom:8px}
+.tool-row:hover{border-color:rgba(139,148,158,.4);transform:translateX(3px)}
+.tr-icon{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;border:1px solid rgba(139,148,158,.1)}
+.tr-info{flex:1;min-width:0}
+.tr-name{font-size:14px;font-weight:800;color:var(--white);margin-bottom:1px}
+.tr-desc{font-size:11px;color:var(--sage);line-height:1.4}
+.tr-badge{font-size:9px;font-weight:700;padding:3px 8px;border-radius:100px;text-transform:uppercase;letter-spacing:.8px;flex-shrink:0}
+.b-live{background:rgba(230,168,23,.12);color:var(--red);border:1px solid rgba(230,168,23,.25)}
+.b-soon{background:rgba(139,148,158,.1);color:var(--sage);border:1px solid rgba(139,148,158,.2)}
+.tool-page-header{padding:16px 20px 0}
+.tph-sub{font-size:13px;color:var(--sage);line-height:1.65}
+.privacy-bar{margin:12px 20px 0;background:rgba(139,148,158,.07);border:1px solid rgba(139,148,158,.16);border-radius:var(--r16);padding:10px 14px;display:flex;align-items:center;gap:10px;font-size:12px;color:var(--sage);font-weight:600}
+.opts-panel{margin:12px 20px 0;background:var(--surface);border-radius:var(--r24);border:1px solid rgba(139,148,158,.2);padding:16px;display:none}
+.opts-panel.show{display:block}
+.opts-title{font-size:12px;font-weight:800;color:var(--white);margin-bottom:12px;text-transform:uppercase;letter-spacing:1px}
+.opt-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.opt-label{font-size:12px;color:var(--sage);font-weight:700;width:72px;flex-shrink:0}
+.opt-input{flex:1;background:var(--bg);border:1px solid rgba(139,148,158,.2);border-radius:10px;padding:9px 12px;font-family:"DM Sans",sans-serif;font-size:13px;font-weight:700;color:var(--white);outline:none;transition:border-color .2s}
+.opt-input:focus{border-color:rgba(139,148,158,.5)}
+.rot-btns{display:flex;gap:8px}
+.rot-btn{flex:1;background:var(--bg);border:1px solid rgba(139,148,158,.2);border-radius:10px;padding:9px 4px;font-family:"DM Sans",sans-serif;font-size:13px;font-weight:800;color:var(--sage);cursor:pointer;transition:all .2s;text-align:center}
+.rot-btn.active{border-color:var(--red);color:var(--red)}
+.upload-wrap{padding:12px 20px 0}
+.upload-zone{border:2px dashed rgba(139,148,158,.28);border-radius:var(--r24);padding:28px 20px;text-align:center;cursor:pointer;transition:all .2s}
+.upload-zone:hover{border-color:rgba(139,148,158,.55);background:rgba(139,148,158,.04)}
+.uz-icon{font-size:28px;margin-bottom:8px}
+.uz-text{font-size:14px;font-weight:800;color:var(--white);margin-bottom:3px}
+.uz-sub{font-size:12px;color:var(--sage)}
+.file-list{padding:10px 20px 0;display:flex;flex-direction:column;gap:8px}
+.file-item{display:flex;align-items:center;gap:11px;background:var(--surface);border-radius:var(--r16);padding:11px 13px;border:1px solid rgba(139,148,158,.15)}
+.fi-icon{font-size:15px;flex-shrink:0}
+.fi-name{font-size:13px;font-weight:700;color:var(--white);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fi-size{font-size:11px;color:var(--sage);flex-shrink:0}
+.fi-rm{width:22px;height:22px;border-radius:50%;background:none;border:1px solid rgba(139,148,158,.2);color:var(--sage);font-size:11px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;flex-shrink:0}
+.fi-rm:hover{background:rgba(230,168,23,.1);border-color:rgba(230,168,23,.3);color:var(--red)}
+.prog-wrap{margin:12px 20px 0;display:none}
+.prog-wrap.show{display:block}
+.prog-top{display:flex;justify-content:space-between;font-size:12px;font-weight:700;color:var(--sage);margin-bottom:8px}
+.prog-track{height:5px;background:rgba(139,148,158,.18);border-radius:3px;overflow:hidden}
+.prog-fill{height:100%;background:linear-gradient(90deg,#c98f0a,#e6a817,#f0b429);border-radius:3px;width:0%;transition:width .35s ease;box-shadow:0 0 8px rgba(230,168,23,.4)}
+.status{margin:10px 20px 0;padding:12px 14px;border-radius:var(--r16);font-size:13px;font-weight:700;text-align:center;display:none}
+.status.show{display:block}
+.status.ok{background:rgba(74,222,128,.09);color:#4ade80;border:1px solid rgba(74,222,128,.2)}
+.status.err{background:rgba(230,168,23,.09);color:var(--red);border:1px solid rgba(230,168,23,.2)}
+.status.info{background:rgba(139,148,158,.09);color:var(--sage);border:1px solid rgba(139,148,158,.2)}
+.run-btn{margin:12px 20px 0;width:calc(100% - 40px);padding:16px;background:linear-gradient(135deg,#f0b429,#e6a817,#c98f0a);color:#0d1117;border:none;border-radius:var(--r40);font-family:"DM Sans",sans-serif;font-size:15px;font-weight:900;cursor:pointer;transition:all .2s;display:block;box-shadow:0 4px 20px rgba(230,168,23,.35)}
+.run-btn:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(230,168,23,.45)}
+.run-btn:disabled{opacity:.35;cursor:not-allowed;transform:none;box-shadow:none}
+.code-area{margin:12px 20px 0;background:var(--surface);border-radius:var(--r24);border:1px solid rgba(139,148,158,.2);overflow:hidden}
+.code-toolbar{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid rgba(139,148,158,.15)}
+.code-dots{display:flex;gap:5px}
+.code-dot{width:10px;height:10px;border-radius:50%}
+.code-toolbar-left{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;color:var(--sage)}
+.code-textarea{width:100%;min-height:220px;background:var(--bg);border:none;outline:none;font-family:"Courier New",monospace;font-size:13px;color:var(--white);padding:16px;resize:vertical;line-height:1.6}
+.code-textarea::placeholder{color:rgba(139,148,158,.5)}
+.preview-overlay{position:fixed;inset:0;z-index:300;background:rgba(23,30,25,.85);backdrop-filter:blur(10px);opacity:0;pointer-events:none;transition:opacity .25s ease;display:flex;flex-direction:column}
+.preview-overlay.open{opacity:1;pointer-events:all}
+.preview-drawer{position:absolute;left:0;right:0;bottom:0;height:88vh;background:var(--surface);border-radius:var(--r40) var(--r40) 0 0;border-top:1px solid rgba(139,148,158,.2);display:flex;flex-direction:column;transform:translateY(100%);transition:transform .3s ease;overflow:hidden}
+.preview-overlay.open .preview-drawer{transform:translateY(0)}
+.preview-handle{width:36px;height:4px;background:rgba(139,148,158,.3);border-radius:2px;margin:14px auto 0}
+.preview-header{display:flex;align-items:center;justify-content:space-between;padding:12px 20px;border-bottom:1px solid rgba(139,148,158,.15);flex-shrink:0}
+.preview-title{font-size:16px;font-weight:900;color:var(--white)}
+.preview-close{width:34px;height:34px;border-radius:50%;background:rgba(139,148,158,.1);border:1px solid rgba(139,148,158,.2);display:flex;align-items:center;justify-content:center;font-size:15px;cursor:pointer;transition:all .2s;color:var(--sage)}
+.preview-close:hover{background:rgba(230,168,23,.1);border-color:rgba(230,168,23,.3);color:var(--red)}
+.preview-iframe{flex:1;border:none;background:#fff}
+.conv-select{width:100%;background:var(--surface);border:1px solid rgba(139,148,158,.25);border-radius:var(--r16);padding:14px 16px;font-family:"DM Sans",sans-serif;font-size:14px;font-weight:700;color:var(--white);outline:none;cursor:pointer;transition:border-color .2s;appearance:none}
+.conv-select:focus{border-color:rgba(139,148,158,.5)}
+/* NOTES */
+.notes-list{padding:12px 20px 0;display:flex;flex-direction:column;gap:10px}
+.note-card{background:var(--surface);border-radius:var(--r24);border:1px solid rgba(139,148,158,.2);padding:16px;cursor:pointer;transition:all .2s;position:relative}
+.note-card:hover{border-color:rgba(139,148,158,.4);transform:translateY(-2px)}
+.note-title{font-size:15px;font-weight:800;color:var(--white);margin-bottom:4px}
+.note-preview{font-size:12px;color:var(--sage);line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.note-date{font-size:10px;color:rgba(139,148,158,.6);margin-top:8px;font-weight:700}
+.note-delete{position:absolute;top:12px;right:12px;width:26px;height:26px;border-radius:50%;background:none;border:1px solid rgba(139,148,158,.2);color:var(--sage);font-size:12px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s}
+.note-delete:hover{background:rgba(230,168,23,.1);border-color:rgba(230,168,23,.3);color:var(--red)}
+.empty-state{text-align:center;padding:48px 20px;color:var(--sage)}
+.empty-icon{font-size:40px;margin-bottom:12px}
+.empty-text{font-size:14px;font-weight:700}
+.note-editor{padding:12px 20px 0;display:flex;flex-direction:column;gap:10px}
+.note-title-input{width:100%;background:var(--surface);border:1px solid rgba(139,148,158,.2);border-radius:var(--r16);padding:14px 16px;font-family:"DM Sans",sans-serif;font-size:18px;font-weight:900;color:var(--white);outline:none;transition:border-color .2s}
+.note-title-input:focus{border-color:rgba(139,148,158,.5)}
+.note-title-input::placeholder{color:rgba(139,148,158,.5)}
+.note-body-input{width:100%;min-height:280px;background:var(--surface);border:1px solid rgba(139,148,158,.2);border-radius:var(--r24);padding:16px;font-family:"DM Sans",sans-serif;font-size:14px;color:var(--white);outline:none;resize:none;line-height:1.7;transition:border-color .2s}
+.note-body-input:focus{border-color:rgba(139,148,158,.5)}
+.note-body-input::placeholder{color:rgba(139,148,158,.5)}
+/* TODO */
+.todo-input-row{margin:12px 20px 0;display:flex;gap:10px}
+.todo-input{flex:1;background:var(--surface);border:1px solid rgba(139,148,158,.2);border-radius:var(--r16);padding:13px 16px;font-family:"DM Sans",sans-serif;font-size:14px;font-weight:700;color:var(--white);outline:none;transition:border-color .2s}
+.todo-input:focus{border-color:rgba(139,148,158,.5)}
+.todo-input::placeholder{color:rgba(139,148,158,.5)}
+.todo-add-btn{width:48px;height:48px;background:var(--red);border:none;border-radius:var(--r16);font-size:20px;color:#fff;cursor:pointer;transition:all .2s;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.todo-add-btn:hover{transform:scale(1.05)}
+.todo-filters{display:flex;gap:8px;padding:12px 20px 0}
+.todo-filter{background:none;border:1px solid rgba(139,148,158,.2);border-radius:100px;padding:6px 14px;font-family:"DM Sans",sans-serif;font-size:11px;font-weight:700;color:var(--sage);cursor:pointer;transition:all .2s}
+.todo-filter.active{background:var(--red);border-color:var(--red);color:#fff}
+.todo-list{padding:10px 20px 0;display:flex;flex-direction:column;gap:8px}
+.todo-item{background:var(--surface);border-radius:var(--r16);border:1px solid rgba(139,148,158,.2);padding:13px 14px;display:flex;align-items:center;gap:12px;transition:all .2s}
+.todo-item.done{opacity:.55}
+.todo-check{width:22px;height:22px;border-radius:50%;border:2px solid rgba(139,148,158,.4);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;flex-shrink:0;background:none}
+.todo-item.done .todo-check{background:var(--red);border-color:var(--red)}
+.todo-text{flex:1;font-size:14px;font-weight:700;color:var(--white);line-height:1.4}
+.todo-item.done .todo-text{text-decoration:line-through;color:var(--sage)}
+.todo-rm{width:22px;height:22px;border-radius:50%;background:none;border:1px solid rgba(139,148,158,.2);color:var(--sage);font-size:11px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;flex-shrink:0}
+.todo-rm:hover{background:rgba(230,168,23,.1);border-color:rgba(230,168,23,.3);color:var(--red)}
+/* HABITS */
+.habit-list{padding:12px 20px 0;display:flex;flex-direction:column;gap:10px}
+.habit-card{background:var(--surface);border-radius:var(--r24);border:1px solid rgba(139,148,158,.2);padding:16px;display:flex;align-items:center;gap:14px;transition:all .2s}
+.habit-icon-wrap{width:44px;height:44px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;border:1px solid rgba(139,148,158,.15);background:rgba(251,146,60,.08)}
+.habit-info{flex:1;min-width:0}
+.habit-name{font-size:14px;font-weight:800;color:var(--white);margin-bottom:2px}
+.habit-streak{font-size:11px;color:var(--sage);font-weight:700}
+.habit-check{width:36px;height:36px;border-radius:50%;border:2px solid rgba(139,148,158,.3);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;flex-shrink:0;font-size:16px;background:none}
+.habit-check.done{background:var(--red);border-color:var(--red)}
+.habit-rm{width:24px;height:24px;border-radius:50%;background:none;border:1px solid rgba(139,148,158,.15);color:var(--sage);font-size:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;flex-shrink:0}
+.habit-rm:hover{background:rgba(230,168,23,.1);border-color:rgba(230,168,23,.3);color:var(--red)}
+.heatmap-wrap{margin:16px 20px 0;background:var(--surface);border-radius:var(--r24);border:1px solid rgba(139,148,158,.2);padding:16px}
+.heatmap-title{font-size:12px;font-weight:800;color:var(--white);margin-bottom:12px;text-transform:uppercase;letter-spacing:1px}
+.heatmap-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.hm-cell{aspect-ratio:1;border-radius:4px;background:rgba(139,148,158,.12);transition:all .2s}
+.hm-cell.done{background:rgba(230,168,23,.5)}
+.hm-cell.today{background:var(--red);box-shadow:0 0 6px rgba(230,168,23,.4)}
+/* POMODORO */
+.pomo-wrap{padding:20px 20px 0;display:flex;flex-direction:column;align-items:center}
+.pomo-ring{position:relative;width:220px;height:220px;margin:0 auto 24px}
+.pomo-svg{transform:rotate(-90deg)}
+.pomo-track{fill:none;stroke:rgba(139,148,158,.15);stroke-width:10}
+.pomo-progress{fill:none;stroke:var(--red);stroke-width:10;stroke-linecap:round;stroke-dasharray:628;stroke-dashoffset:628;transition:stroke-dashoffset .9s linear}
+.pomo-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.pomo-time{font-size:48px;font-weight:900;color:var(--white);line-height:1;letter-spacing:-2px}
+.pomo-label{font-size:12px;font-weight:700;color:var(--sage);text-transform:uppercase;letter-spacing:2px;margin-top:4px}
+.pomo-controls{display:flex;gap:12px;margin-bottom:24px}
+.pomo-btn{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;cursor:pointer;transition:all .2s;border:none}
+.pomo-btn.main{background:var(--red);color:#fff;width:68px;height:68px;box-shadow:0 0 20px rgba(230,168,23,.35)}
+.pomo-btn.main:hover{transform:scale(1.08)}
+.pomo-btn.sec{background:var(--surface);border:1px solid rgba(139,148,158,.25);color:var(--sage)}
+.pomo-btn.sec:hover{border-color:rgba(139,148,158,.5);color:var(--white)}
+.pomo-modes{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;justify-content:center}
+.pomo-mode{background:var(--surface);border:1px solid rgba(139,148,158,.2);border-radius:100px;padding:8px 16px;font-family:"DM Sans",sans-serif;font-size:12px;font-weight:700;color:var(--sage);cursor:pointer;transition:all .2s}
+.pomo-mode.active{background:rgba(230,168,23,.1);border-color:rgba(230,168,23,.3);color:var(--red)}
+.pomo-stats{width:100%;display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.pomo-stat{background:var(--surface);border-radius:var(--r16);border:1px solid rgba(139,148,158,.2);padding:14px;text-align:center}
+.pomo-stat-val{font-size:22px;font-weight:900;color:var(--white);line-height:1}
+.pomo-stat-lbl{font-size:10px;font-weight:700;color:var(--sage);text-transform:uppercase;letter-spacing:1px;margin-top:4px}
+/* CALENDAR */
+.cal-wrap{padding:16px 20px 0}
+.cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.cal-nav-btn{width:36px;height:36px;border-radius:50%;background:var(--surface);border:1px solid rgba(139,148,158,.2);display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;color:var(--sage);transition:all .2s}
+.cal-nav-btn:hover{border-color:rgba(139,148,158,.5);color:var(--white)}
+.cal-month{font-size:18px;font-weight:900;color:var(--white)}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:16px}
+.cal-day-name{font-size:10px;font-weight:700;color:var(--sage);text-align:center;padding:4px 0;text-transform:uppercase}
+.cal-day{aspect-ratio:1;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--sage);cursor:pointer;transition:all .2s;position:relative}
+.cal-day:hover{background:rgba(139,148,158,.1);color:var(--white)}
+.cal-day.today{background:rgba(230,168,23,.12);color:var(--red);border:1px solid rgba(230,168,23,.3)}
+.cal-day.has-event::after{content:"";position:absolute;bottom:3px;left:50%;transform:translateX(-50%);width:4px;height:4px;border-radius:50%;background:var(--red)}
+.cal-day.other-month{opacity:.3}
+.cal-day.selected{background:var(--red);color:#fff}
+.event-section{background:var(--surface);border-radius:var(--r24);border:1px solid rgba(139,148,158,.2);padding:16px}
+.event-section-title{font-size:13px;font-weight:800;color:var(--white);margin-bottom:12px}
+.event-input-row{display:flex;gap:8px;margin-bottom:12px;display:none}
+.event-item{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid rgba(139,148,158,.1)}
+.event-item:last-child{border-bottom:none;padding-bottom:0}
+.event-dot{width:8px;height:8px;border-radius:50%;background:var(--red);flex-shrink:0}
+.event-info{flex:1}
+.event-name{font-size:13px;font-weight:700;color:var(--white)}
+.event-time{font-size:11px;color:var(--sage);margin-top:1px}
+.event-rm{width:20px;height:20px;border-radius:50%;background:none;border:1px solid rgba(139,148,158,.15);color:var(--sage);font-size:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:all .2s}
+.event-rm:hover{background:rgba(230,168,23,.1);border-color:rgba(230,168,23,.3);color:var(--red)}
+.no-events{font-size:12px;color:var(--sage);text-align:center;padding:16px 0}
+/* MIND MAP */
+.mindmap-wrap{padding:12px 20px 0}
+.mm-canvas-wrap{background:var(--surface);border-radius:var(--r24);border:1px solid rgba(139,148,158,.2);overflow:hidden;position:relative;height:380px;touch-action:none}
+.mm-canvas{width:100%;height:100%}
+.mm-toolbar{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.mm-btn{background:var(--surface);border:1px solid rgba(139,148,158,.2);border-radius:var(--r16);padding:10px 14px;font-family:"DM Sans",sans-serif;font-size:12px;font-weight:700;color:var(--sage);cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:6px}
+.mm-btn:hover{border-color:rgba(139,148,158,.45);color:var(--white)}
+.mm-input-row{display:flex;gap:8px;margin-top:10px}
+/* NAV */
+.fnav{position:fixed;left:8px;right:8px;bottom:8px;height:64px;background:var(--surface);border-radius:32px;border:1px solid rgba(139,148,158,.2);display:flex;align-items:center;justify-content:space-around;padding:0 16px;box-shadow:0 8px 32px rgba(0,0,0,.5);z-index:100;max-width:464px;margin:0 auto}
+.fn-btn{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;cursor:pointer;transition:all .2s;color:var(--sage);border:none;background:none}
+.fn-btn.on{color:var(--white)}
+.fn-btn:hover{background:rgba(139,148,158,.1);color:var(--white)}
+.fn-fab{width:56px;height:56px;background:linear-gradient(145deg,#f0b429,#e6a817,#c98f0a);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;color:#0d1117;margin-top:-32px;border:3px solid var(--bg);box-shadow:0 0 28px rgba(230,168,23,.5),0 4px 16px rgba(0,0,0,.4);transition:transform .2s,box-shadow .2s;cursor:pointer;flex-shrink:0}
+.fn-fab:hover{transform:scale(1.08) translateY(-2px)}
+.toast{position:fixed;bottom:84px;left:50%;transform:translateX(-50%) translateY(10px);background:var(--surface);border:1px solid rgba(139,148,158,.3);border-radius:100px;padding:10px 18px;font-size:13px;font-weight:700;color:var(--white);z-index:400;opacity:0;transition:all .25s ease;pointer-events:none;white-space:nowrap;box-shadow:var(--shadow)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ══════════════════════════════════
+   MEDIA STUDIO
+══════════════════════════════════ */
+.media-notice{
+  margin:12px 20px 0;
+  background:rgba(255,210,60,.07);
+  border:1px solid rgba(255,210,60,.2);
+  border-radius:var(--r16);
+  padding:10px 14px;
+  display:flex;align-items:center;gap:10px;
+  font-size:12px;color:rgba(255,210,60,.9);font-weight:600;
+}
+.url-input-wrap{padding:14px 20px 0}
+.url-input-label{font-size:10px;font-weight:700;color:var(--sage);text-transform:uppercase;letter-spacing:2px;margin-bottom:8px}
+.url-textarea{
+  width:100%;min-height:120px;
+  background:var(--surface);
+  border:1px solid rgba(139,148,158,.2);
+  border-radius:var(--r24);
+  padding:14px 16px;
+  font-family:"DM Sans",sans-serif;
+  font-size:13px;font-weight:600;
+  color:var(--white);outline:none;
+  resize:none;line-height:1.7;
+  transition:border-color .2s;
+}
+.url-textarea:focus{border-color:rgba(139,148,158,.5)}
+.url-textarea::placeholder{color:rgba(139,148,158,.4)}
+.url-single-input{
+  width:100%;
+  background:var(--surface);
+  border:1px solid rgba(139,148,158,.2);
+  border-radius:var(--r16);
+  padding:14px 16px;
+  font-family:"DM Sans",sans-serif;
+  font-size:13px;font-weight:600;
+  color:var(--white);outline:none;
+  transition:border-color .2s;
+}
+.url-single-input:focus{border-color:rgba(139,148,158,.5)}
+.url-single-input::placeholder{color:rgba(139,148,158,.4)}
+.url-count{font-size:11px;font-weight:700;color:var(--sage);margin-top:6px;text-align:right}
+.media-options{padding:14px 20px 0;display:flex;flex-direction:column;gap:16px}
+.media-opt-group{}
+.media-opt-label{font-size:10px;font-weight:700;color:var(--sage);text-transform:uppercase;letter-spacing:2px;margin-bottom:8px}
+.media-opt-row{display:flex;gap:8px;flex-wrap:wrap}
+.media-opt-btn{
+  background:var(--surface);
+  border:1px solid rgba(139,148,158,.2);
+  border-radius:100px;
+  padding:7px 16px;
+  font-family:"DM Sans",sans-serif;
+  font-size:12px;font-weight:800;
+  color:var(--sage);cursor:pointer;
+  transition:all .2s;
+}
+.media-opt-btn:hover{border-color:rgba(139,148,158,.5);color:var(--white)}
+.media-opt-btn.active{background:rgba(230,168,23,.1);border-color:rgba(230,168,23,.35);color:var(--red)}
+
+/* QUEUE ITEMS */
+.queue-item{
+  background:var(--surface);
+  border-radius:var(--r24);
+  border:1px solid rgba(139,148,158,.2);
+  padding:16px;
+  display:flex;flex-direction:column;gap:10px;
+  transition:all .2s;
+}
+.queue-item.downloading{border-color:rgba(255,210,60,.3)}
+.queue-item.done{border-color:rgba(74,222,128,.25);opacity:.75}
+.queue-item.error{border-color:rgba(230,168,23,.25)}
+.qi-top{display:flex;align-items:flex-start;gap:12px}
+.qi-icon{
+  width:40px;height:40px;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;flex-shrink:0;
+  background:rgba(255,210,60,.08);
+  border:1px solid rgba(255,210,60,.15);
+}
+.qi-info{flex:1;min-width:0}
+.qi-url{font-size:12px;font-weight:700;color:var(--white);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-bottom:3px}
+.qi-meta{font-size:11px;color:var(--sage);display:flex;gap:8px;flex-wrap:wrap}
+.qi-tag{background:rgba(139,148,158,.1);border-radius:100px;padding:2px 8px;font-size:10px;font-weight:700}
+.qi-status{font-size:11px;font-weight:700;flex-shrink:0}
+.qi-status.pending{color:var(--sage)}
+.qi-status.downloading{color:rgba(255,210,60,.9)}
+.qi-status.done{color:#4ade80}
+.qi-status.error{color:var(--red)}
+.qi-progress{height:4px;background:rgba(139,148,158,.18);border-radius:2px;overflow:hidden}
+.qi-prog-fill{height:100%;background:rgba(255,210,60,.8);border-radius:2px;transition:width .4s ease}
+.queue-item.done .qi-prog-fill{background:#4ade80}
+.queue-item.error .qi-prog-fill{background:var(--red)}
+.qi-actions{display:flex;gap:8px}
+.qi-action-btn{
+  background:none;border:1px solid rgba(139,148,158,.2);
+  border-radius:100px;padding:6px 12px;
+  font-family:"DM Sans",sans-serif;font-size:11px;font-weight:700;
+  color:var(--sage);cursor:pointer;transition:all .2s;
+}
+.qi-action-btn:hover{border-color:rgba(139,148,158,.5);color:var(--white)}
+.qi-action-btn.danger:hover{border-color:rgba(230,168,23,.3);color:var(--red)}
+
+/* WEBCAP RESULTS */
+.webcap-result-item{
+  background:var(--surface);
+  border-radius:var(--r24);
+  border:1px solid rgba(139,148,158,.2);
+  padding:16px;margin-top:10px;
+}
+.wcr-top{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.wcr-icon{width:40px;height:40px;border-radius:12px;background:rgba(255,210,60,.08);border:1px solid rgba(255,210,60,.15);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.wcr-info{flex:1;min-width:0}
+.wcr-title{font-size:13px;font-weight:800;color:var(--white);margin-bottom:2px}
+.wcr-url{font-size:11px;color:var(--sage);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.wcr-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.wcr-tag{background:rgba(139,148,158,.1);border:1px solid rgba(139,148,158,.2);border-radius:100px;padding:3px 10px;font-size:10px;font-weight:700;color:var(--sage)}
+
+
+/* ══ BROWSER ══ */
+.browser-quick-btn{
+  width:100%;padding:13px 16px;
+  background:var(--surface);border:1px solid rgba(139,148,158,.2);
+  border-radius:var(--r16);
+  font-family:"DM Sans",sans-serif;font-size:13px;font-weight:700;
+  color:var(--white);cursor:pointer;transition:all .2s;
+  text-align:left;
+}
+.browser-quick-btn:hover{border-color:rgba(139,148,158,.45);transform:translateX(3px)}
+
+/* ══ SETTINGS ══ */
+.settings-item{
+  background:var(--surface);border-radius:var(--r16);
+  border:1px solid rgba(139,148,158,.2);
+  padding:14px 16px;margin-bottom:8px;
+  display:flex;align-items:center;justify-content:space-between;
+  cursor:pointer;transition:all .2s;
+}
+.settings-item:hover{border-color:rgba(139,148,158,.4)}
+.si-left{display:flex;align-items:center;gap:12px}
+.si-icon{
+  width:40px;height:40px;border-radius:12px;
+  background:rgba(139,148,158,.08);
+  border:1px solid rgba(139,148,158,.1);
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;flex-shrink:0;
+}
+.si-info{}
+.si-name{font-size:14px;font-weight:800;color:var(--white);margin-bottom:1px}
+.si-desc{font-size:11px;color:var(--sage)}
+.si-right{font-size:12px;font-weight:700;color:var(--sage);flex-shrink:0;margin-left:12px}
+
+/* ══ PROJECTS ══ */
+.project-card{
+  background:var(--surface);border-radius:var(--r24);
+  border:1px solid rgba(139,148,158,.2);
+  padding:16px;margin-bottom:8px;
+  display:flex;align-items:center;gap:14px;
+  cursor:pointer;transition:all .2s;
+}
+.project-card:hover{border-color:rgba(139,148,158,.4);transform:translateX(3px)}
+.proj-icon{
+  width:44px;height:44px;border-radius:14px;
+  background:rgba(230,168,23,.1);border:1px solid rgba(230,168,23,.2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;flex-shrink:0;
+}
+.proj-info{flex:1;min-width:0}
+.proj-name{font-size:14px;font-weight:800;color:var(--white);margin-bottom:2px}
+.proj-desc{font-size:11px;color:var(--sage)}
+.proj-arrow{font-size:14px;color:var(--sage);flex-shrink:0}
+
+
+/* ══ IMAGE ENHANCER ══ */
+.enhance-slider-group{margin-bottom:16px}
+.enhance-slider-label{display:flex;justify-content:space-between;font-size:12px;font-weight:700;color:var(--white);margin-bottom:8px}
+.enhance-slider-label span:last-child{color:var(--red);font-family:"Courier New",monospace}
+.enhance-slider{
+  width:100%;height:4px;
+  -webkit-appearance:none;appearance:none;
+  background:rgba(139,148,158,.2);border-radius:2px;outline:none;cursor:pointer;
+}
+.enhance-slider::-webkit-slider-thumb{
+  -webkit-appearance:none;appearance:none;
+  width:20px;height:20px;border-radius:50%;
+  background:var(--red);cursor:pointer;
+  box-shadow:0 0 8px rgba(230,168,23,.4);
+}
+.enhance-slider::-moz-range-thumb{
+  width:20px;height:20px;border-radius:50%;
+  background:var(--red);cursor:pointer;border:none;
+}
+
+/* ══ FRAMES GRID ══ */
+.frame-thumb{
+  aspect-ratio:16/9;border-radius:10px;
+  overflow:hidden;position:relative;
+  border:1px solid rgba(139,148,158,.2);cursor:pointer;
+}
+.frame-thumb img{width:100%;height:100%;object-fit:cover}
+.frame-thumb-label{
+  position:absolute;bottom:0;left:0;right:0;
+  background:rgba(23,30,25,.8);
+  font-size:9px;font-weight:700;color:var(--sage);
+  padding:3px 6px;text-align:center;
+}
+.frame-thumb-dl{
+  position:absolute;top:4px;right:4px;
+  width:22px;height:22px;border-radius:50%;
+  background:rgba(230,168,23,.9);border:none;
+  color:#fff;font-size:11px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+}
+
+</style>
+<meta name="theme-color" content="#0d1117"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="Infinity Studio"/>
+</head>
+<body>
+
+<!-- HOME -->
+<div id="pg-home" class="page active">
+  <div class="header">
+    <div><div class="h-eyebrow" id="greeting">Good Evening</div><div class="h-wordmark">Infinity<span>Studio</span></div></div>
+    <div class="avatar">IS</div>
+  </div>
+  <div class="studios">
+    <div class="studio-card" onclick="goTo('pg-media')">
+      <div class="sc-blob" style="background:rgba(255,210,60,.07)"></div>
+      <div class="sc-top"><div class="sc-icon" style="background:rgba(255,210,60,.07)">&#128444;&#65039;</div><div class="sc-arrow">&#8594;</div></div>
+      <div class="sc-name">Media Studio</div>
+      <div class="sc-desc">Download videos and audio from any URL. Pick quality, format and manage your queue.</div>
+      <div class="sc-pills"><div class="sc-pill">&#9654;&#65039; Video DL</div><div class="sc-pill">&#127925; Audio DL</div><div class="sc-pill">&#128203; Queue</div></div>
+    </div>
+    <div class="studio-card" onclick="goTo('pg-docs')">
+      <div class="sc-blob" style="background:rgba(255,100,100,.08)"></div>
+      <div class="sc-top"><div class="sc-icon" style="background:rgba(255,100,100,.08)">&#128196;</div><div class="sc-arrow">&#8594;</div></div>
+      <div class="sc-name">Docs Studio</div>
+      <div class="sc-desc">PDF tools, HTML tools and a universal converter. All running locally in your browser.</div>
+      <div class="sc-pills"><div class="sc-pill">&#9879;&#65039; PDF Lab</div><div class="sc-pill">&#128293; HTML Forge</div><div class="sc-pill">&#128257; Converter</div></div>
+    </div>
+    <div class="studio-card" onclick="goTo('pg-productivity')">
+      <div class="sc-blob" style="background:rgba(167,139,250,.07)"></div>
+      <div class="sc-top"><div class="sc-icon" style="background:rgba(167,139,250,.07)">&#128640;</div><div class="sc-arrow">&#8594;</div></div>
+      <div class="sc-name">Productivity Studio</div>
+      <div class="sc-desc">Notes, tasks, habits, focus timer, calendar and mind maps. Your personal command center.</div>
+      <div class="sc-pills"><div class="sc-pill">&#128221; Notes</div><div class="sc-pill">&#9989; To-Do</div><div class="sc-pill">&#128293; Habits</div><div class="sc-pill">&#127829; Focus</div><div class="sc-pill">&#128197; Calendar</div><div class="sc-pill">&#129504; Mind Map</div></div>
+    </div>
+  </div>
+  <div class="quick-section">
+    <div class="qs-label">Quick Actions</div>
+    <div class="quick-grid">
+      <button class="qa" onclick="goTo('pg-notes')"><div class="qa-icon">&#128221;</div><div class="qa-lbl">New Note</div></button>
+      <button class="qa" onclick="goTo('pg-todo')"><div class="qa-icon">&#9989;</div><div class="qa-lbl">To-Do</div></button>
+      <button class="qa" onclick="goTo('pg-pomodoro')"><div class="qa-icon">&#127829;</div><div class="qa-lbl">Focus</div></button>
+      <button class="qa" onclick="goTo('pg-merge')"><div class="qa-icon">&#128256;</div><div class="qa-lbl">Merge PDF</div></button>
+    </div>
+  </div>
+</div>
+
+<!-- DOCS STUDIO -->
+<div id="pg-docs" class="page">
+  <div class="back-header"><button class="back-btn" onclick="goTo('pg-home')">&#8592;</button><div class="back-title">&#128196; Docs Studio</div></div>
+  <div class="section-block">
+    <div class="sb-label">&#9879;&#65039; PDF Lab</div>
+    <div class="tool-row" onclick="goTo('pg-merge')"><div class="tr-icon" style="background:rgba(255,100,100,.08)">&#128256;</div><div class="tr-info"><div class="tr-name">Merge</div><div class="tr-desc">Combine multiple PDFs into one file</div></div><div class="tr-badge b-live">Live</div></div>
+    <div class="tool-row" onclick="goTo('pg-split')"><div class="tr-icon" style="background:rgba(255,100,100,.08)">&#9986;&#65039;</div><div class="tr-info"><div class="tr-name">Split</div><div class="tr-desc">Extract any page range into separate files</div></div><div class="tr-badge b-live">Live</div></div>
+    <div class="tool-row" onclick="goTo('pg-compress')"><div class="tr-icon" style="background:rgba(255,100,100,.08)">&#128376;&#65039;</div><div class="tr-info"><div class="tr-name">Compress</div><div class="tr-desc">Reduce file size without quality loss</div></div><div class="tr-badge b-live">Live</div></div>
+    <div class="tool-row" onclick="goTo('pg-rotate')"><div class="tr-icon" style="background:rgba(255,100,100,.08)">&#128260;</div><div class="tr-info"><div class="tr-name">Rotate</div><div class="tr-desc">Rotate all pages by any angle</div></div><div class="tr-badge b-live">Live</div></div>
+    <div class="tool-row" onclick="toast('PDF Editor coming soon')"><div class="tr-icon" style="background:rgba(255,100,100,.08)">&#9999;&#65039;</div><div class="tr-info"><div class="tr-name">Editor</div><div class="tr-desc">Add text, shapes and annotations</div></div><div class="tr-badge b-soon">Soon</div></div>
+    <div class="tool-row" onclick="goTo('pg-converter')"><div class="tr-icon" style="background:rgba(255,100,100,.08)">&#128257;</div><div class="tr-info"><div class="tr-name">PDF Converter</div><div class="tr-desc">Convert PDFs to and from other formats</div></div><div class="tr-badge b-live">Live</div></div>
+  </div>
+  <div class="section-block" style="padding-bottom:20px">
+    <div class="sb-label">&#128293; HTML Forge</div>
+    <div class="tool-row" onclick="goTo('pg-runner')"><div class="tr-icon" style="background:rgba(56,189,248,.07)">&#9889;</div><div class="tr-info"><div class="tr-name">HTML Runner</div><div class="tr-desc">Write HTML and preview it live in a drawer</div></div><div class="tr-badge b-live">Live</div></div>
+    <div class="tool-row" onclick="goTo('pg-htmlpdf')"><div class="tr-icon" style="background:rgba(56,189,248,.07)">&#128196;</div><div class="tr-info"><div class="tr-name">HTML to PDF</div><div class="tr-desc">Convert any HTML into a PDF file</div></div><div class="tr-badge b-live">Live</div></div>
+    <div class="tool-row" onclick="goTo('pg-htmlimg')"><div class="tr-icon" style="background:rgba(56,189,248,.07)">&#128444;&#65039;</div><div class="tr-info"><div class="tr-name">HTML to Image</div><div class="tr-desc">Render HTML and export as PNG</div></div><div class="tr-badge b-live">Live</div></div>
+    <div class="sb-label" style="margin-top:20px">&#128257; Universal Converter</div>
+    <div class="tool-row" onclick="goTo('pg-converter')"><div class="tr-icon" style="background:rgba(74,222,128,.07)">&#128257;</div><div class="tr-info"><div class="tr-name">Universal Converter</div><div class="tr-desc">Convert anything into anything</div></div><div class="tr-badge b-live">Live</div></div>
+    <div class="sb-label" style="margin-top:20px">&#127748; Pixel Lab</div>
+    <div class="tool-row" onclick="goTo('pg-img-compress')"><div class="tr-icon" style="background:rgba(74,222,128,.07)">&#128247;</div><div class="tr-info"><div class="tr-name">Image Compressor</div><div class="tr-desc">Reduce image size without visible quality loss</div></div><div class="tr-badge b-live">Live</div></div>
+    <div class="tool-row" onclick="goTo('pg-img-resize')"><div class="tr-icon" style="background:rgba(74,222,128,.07)">&#128247;</div><div class="tr-info"><div class="tr-name">Image Resizer</div><div class="tr-desc">Resize to exact dimensions or percentage</div></div><div class="tr-badge b-live">Live</div></div>
+    <div class="tool-row" onclick="goTo('pg-img-crop')"><div class="tr-icon" style="background:rgba(74,222,128,.07)">&#9986;&#65039;</div><div class="tr-info"><div class="tr-name">Image Crop</div><div class="tr-desc">Crop to any area or aspect ratio</div></div><div class="tr-badge b-live">Live</div></div>
+    <div class="tool-row" onclick="goTo('pg-img-convert')"><div class="tr-icon" style="background:rgba(74,222,128,.07)">&#128257;</div><div class="tr-info"><div class="tr-name">Format Converter</div><div class="tr-desc">Convert between PNG, JPG, WebP, AVIF and more</div></div><div class="tr-badge b-live">Live</div></div>
+    <div class="tool-row" onclick="goTo('pg-img-enhance')"><div class="tr-icon" style="background:rgba(74,222,128,.07)">&#10024;</div><div class="tr-info"><div class="tr-name">Image Enhancer</div><div class="tr-desc">Brightness, contrast, saturation and AI-style sharpening</div></div><div class="tr-badge b-live">Live</div></div>
+    <div class="tool-row" onclick="goTo('pg-vid-frames')"><div class="tr-icon" style="background:rgba(74,222,128,.07)">&#127916;</div><div class="tr-info"><div class="tr-name">Video to Frames</div><div class="tr-desc">Extract frames from any video or YouTube URL as images</div></div><div class="tr-badge b-live">Live</div></div>
+  </div>
+</div>
+
+<!-- PDF TOOLS -->
+<div id="pg-merge" class="page">
+  <div class="back-header"><button class="back-btn" onclick="goTo('pg-docs')">&#8592;</button><div class="back-title">&#128256; Merge PDFs</div></div>
+  <div class="tool-page-header"><div class="tph-sub">Combine multiple PDFs into one. Files merge in the order you add them.</div></div>
+  <div class="privacy-bar"><span>&#128274;</span><span>Processed locally — files never leave your device.</span></div>
+  <div class="upload-wrap"><div class="upload-zone" onclick="document.getElementById('fi-merge').click()"><div class="uz-icon">&#128194;</div><div class="uz-text">Tap to add PDF files</div><div class="uz-sub">Select 2 or more PDFs</div></div><input type="file" id="fi-merge" accept=".pdf" multiple style="display:none" onchange="addFiles('merge',event)"/></div>
+  <div class="file-list" id="fl-merge"></div>
+  <div class="prog-wrap" id="pw-merge"><div class="prog-top"><span id="pt-merge">Processing...</span><span id="pp-merge">0%</span></div><div class="prog-track"><div class="prog-fill" id="pf-merge"></div></div></div>
+  <div class="status" id="st-merge"></div>
+  <button class="run-btn" id="rb-merge" disabled onclick="runMerge()">Add at least 2 PDFs</button>
+</div>
+
+<div id="pg-split" class="page">
+  <div class="back-header"><button class="back-btn" onclick="goTo('pg-docs')">&#8592;</button><div class="back-title">&#9986;&#65039; Split PDF</div></div>
+  <div class="tool-page-header"><div class="tph-sub">Extract a page range or split every page into its own file.</div></div>
+  <div class="privacy-bar"><span>&#128274;</span><span>Processed locally — files never leave your device.</span></div>
+  <div class="opts-panel show" style="margin-top:14px"><div class="opts-title">Page Range</div><div class="opt-row"><div class="opt-label">From page</div><input class="opt-input" type="number" id="sp-from" placeholder="1" min="1"/></div><div class="opt-row"><div class="opt-label">To page</div><input class="opt-input" type="number" id="sp-to" placeholder="Leave blank = all" min="1"/></div></div>
+  <div class="upload-wrap"><div class="upload-zone" onclick="document.getElementById('fi-split').click()"><div class="uz-icon">&#128194;</div><div class="uz-text">Tap to select a PDF</div><div class="uz-sub">Select 1 PDF to split</div></div><input type="file" id="fi-split" accept=".pdf" style="display:none" onchange="addFiles('split',event)"/></div>
+  <div class="file-list" id="fl-split"></div>
+  <div class="prog-wrap" id="pw-split"><div class="prog-top"><span id="pt-split">Processing...</span><span id="pp-split">0%</span></div><div class="prog-track"><div class="prog-fill" id="pf-split"></div></div></div>
+  <div class="status" id="st-split"></div>
+  <button class="run-btn" id="rb-split" disabled onclick="runSplit()">Select a PDF first</button>
+</div>
+
+<div id="pg-compress" class="page">
+  <div class="back-header"><button class="back-btn" onclick="goTo('pg-docs')">&#8592;</button><div class="back-title">&#128376;&#65039; Compress PDF</div></div>
+  <div class="tool-page-header"><div class="tph-sub">Optimize your PDF to reduce file size. Shows before and after.</div></div>
+  <div class="privacy-bar"><span>&#128274;</span><span>Processed locally — files never leave your device.</span></div>
+  <div class="upload-wrap"><div class="upload-zone" onclick="document.getElementById('fi-compress').click()"><div class="uz-icon">&#128194;</div><div class="uz-text">Tap to select a PDF</div><div class="uz-sub">Select 1 PDF to compress</div></div><input type="file" id="fi-compress" accept=".pdf" style="display:none" onchange="addFiles('compress',event)"/></div>
+  <div class="file-list" id="fl-compress"></div>
+  <div class="prog-wrap" id="pw-compress"><div class="prog-top"><span id="pt-compress">Compressing...</span><span id="pp-compress">0%</span></div><div class="prog-track"><div class="prog-fill" id="pf-compress"></div></div></div>
+  <div class="status" id="st-compress"></div>
+  <button class="run-btn" id="rb-compress" disabled onclick="runCompress()">Select a PDF first</button>
+</div>
+
+<div id="pg-rotate" class="page">
+  <div class="back-header"><button class="back-btn" onclick="goTo('pg-docs')">&#8592;</button><div class="back-title">&#128260; Rotate PDF</div></div>
+  <div class="tool-page-header"><div class="tph-sub">Rotate all pages in your PDF to the correct orientation.</div></div>
+  <div class="privacy-bar"><span>&#128274;</span><span>Processed locally — files never leave your device.</span></div>
+  <div class="opts-panel show" style="margin-top:14px"><div class="opts-title">Rotation Angle</div><div class="rot-btns"><button class="rot-btn active" id="rb90" onclick="setRot(90)">90 deg</button><button class="rot-btn" id="rb180" onclick="setRot(180)">180 deg</button><button class="rot-btn" id="rb270" onclick="setRot(270)">270 deg</button></div></div>
+  <div class="upload-wrap"><div class="upload-zone" onclick="document.getElementById('fi-rotate').click()"><div class="uz-icon">&#128194;</div><div class="uz-text">Tap to select a PDF</div><div class="uz-sub">Select 1 PDF to rotate</div></div><input type="file" id="fi-rotate" accept=".pdf" style="display:none" onchange="addFiles('rotate',event)"/></div>
+  <div class="file-list" id="fl-rotate"></div>
+  <div class="prog-wrap" id="pw-rotate"><div class="prog-top"><span id="pt-rotate">Rotating...</span><span id="pp-rotate">0%</span></div><div class="prog-track"><div class="prog-fill" id="pf-rotate"></div></div></div>
+  <div class="status" id="st-rotate"></div>
+  <button class="run-btn" id="rb-rotate" disabled onclick="runRotate()">Select a PDF first</button>
+</div>
+
+<!-- HTML FORGE -->
+<div id="pg-runner" class="page">
+  <div class="back-header"><button class="back-btn" onclick="goTo('pg-docs')">&#8592;</button><div class="back-title">&#9889; HTML Runner</div></div>
+  <div class="tool-page-header"><div class="tph-sub">Write HTML and tap Run to see it live in a full preview drawer.</div></div>
+  <div class="code-area"><div class="code-toolbar"><div class="code-toolbar-left"><div class="code-dots"><div class="code-dot" style="background:#ff5f57"></div><div class="code-dot" style="background:#febc2e"></div><div class="code-dot" style="background:#28c840"></div></div>index.html</div><button onclick="document.getElementById('html-code').value=''" style="font-size:11px;font-weight:700;color:var(--sage);background:none;border:none;cursor:pointer;font-family:DM Sans,sans-serif">Clear</button></div><textarea class="code-textarea" id="html-code" placeholder="Write your HTML here..."></textarea></div>
+  <button class="run-btn" onclick="runPreview()">Run Preview</button>
+</div>
+
+<div id="pg-htmlpdf" class="page">
+  <div class="back-header"><button class="back-btn" onclick="goTo('pg-docs')">&#8592;</button><div class="back-title">HTML to PDF</div></div>
+  <div class="tool-page-header"><div class="tph-sub">Paste HTML and convert to PDF via the print dialog.</div></div>
+  <div class="code-area"><div class="code-toolbar"><div class="code-toolbar-left"><div class="code-dots"><div class="code-dot" style="background:#ff5f57"></div><div class="code-dot" style="background:#febc2e"></div><div class="code-dot" style="background:#28c840"></div></div>index.html</div></div><textarea class="code-textarea" id="htmlpdf-code" placeholder="Paste your HTML here..."></textarea></div>
+  <div class="status" id="st-htmlpdf"></div>
+  <button class="run-btn" onclick="runHtmlToPdf()">Convert to PDF</button>
+</div>
+
+<div id="pg-htmlimg" class="page">
+  <div class="back-header"><button class="back-btn" onclick="goTo('pg-docs')">&#8592;</button><div class="back-title">HTML to Image</div></div>
+  <div class="tool-page-header"><div class="tph-sub">Render HTML and export as PNG.</div></div>
+  <div class="code-area"><div class="code-toolbar"><div class="code-toolbar-left"><div class="code-dots"><div class="code-dot" style="background:#ff5f57"></div><div class="code-dot" style="background:#febc2e"></div><div class="code-dot" style="background:#28c840"></div></div>index.html</div></div><textarea class="code-textarea" id="htmlimg-code" placeholder="Paste your HTML here..."></textarea></div>
+  <div class="status" id="st-htmlimg"></div>
+  <button class="run-btn" onclick="runHtmlToImg()">Export as PNG</button>
+</div>
+
+<!-- CONVERTER -->
+<div id="pg-converter" class="page">
+  <div class="back-header"><button class="back-btn" onclick="goTo('pg-docs')">&#8592;</button><div class="back-title">&#128257; Universal Converter</div></div>
+  <div class="tool-page-header"><div class="tph-sub">Select what to convert from and to, then upload your file.</div></div>
+  <div class="privacy-bar"><span>&#128274;</span><span>Processed locally — files never leave your device.</span></div>
+  <div style="padding:16px 20px 0">
+    <div style="font-size:10px;font-weight:700;color:var(--sage);text-transform:uppercase;letter-spacing:2px;margin-bottom:8px">From</div>
+    <select class="conv-select" id="conv-from" onchange="updateConvTo()"><optgroup label="Document"><option value="pdf">PDF</option><option value="html">HTML</option></optgroup><optgroup label="Image"><option value="png">PNG</option><option value="jpg">JPG</option><option value="webp">WebP</option><option value="gif">GIF</option><option value="bmp">BMP</option></optgroup></select>
+    <div style="text-align:center;margin:12px 0;font-size:20px;color:var(--sage)">&#8595;</div>
+    <div style="font-size:10px;font-weight:700;color:var(--sage);text-transform:uppercase;letter-spacing:2px;margin-bottom:8px">To</div>
+    <select class="conv-select" id="conv-to"></select>
+  </div>
+  <div class="upload-wrap"><div class="upload-zone" onclick="document.getElementById('fi-conv').click()"><div class="uz-icon">&#128194;</div><div class="uz-text">Tap to select a file</div><div class="uz-sub">Select a file to convert</div></div><input type="file" id="fi-conv" style="display:none" onchange="addFiles('conv',event)"/></div>
+  <div class="file-list" id="fl-conv"></div>
+  <div class="prog-wrap" id="pw-conv"><div class="prog-top"><span id="pt-conv">Converting...</span><span id="pp-conv">0%</span></div><div class="prog-track"><div class="prog-fill" id="pf-conv"></div></div></div>
+  <div class="status" id="st-conv"></div>
+  <button class="run-btn" id="rb-conv" disabled onclick="runConvert()">Select a file first</button>
+</div>
+
+<!-- PRODUCTIVITY STUDIO -->
+<div id="pg-productivity" class="page">
+  <div class="back-header"><button class="back-btn" onclick="goTo('pg-home')">&#8592;</button><div class="back-title">&#128640; Productivity Studio</div></div>
+  <div class="section-block" style="padding-bottom:20px">
+    <div class="sb-label">Tools</div>
+    <div class="tool-row" onclick="goTo('pg-notes')"><div class="tr-icon" style="background:rgba(0,220,150,.07)">&#128221;</div><div class="tr-info"><div class="tr-name">Notes</div><div class="tr-desc">Rich notes saved to your device</div></div><div class="tr-badge b-live">Live</div></div>
+    <div class="tool-row" onclick="goTo('pg-todo')"><div class="tr-icon" style="background:rgba(167,139,250,.08)">&#9989;</div><div class="tr-info"><div class="tr-name">To-Do</div><div class="tr-desc">Tasks with completion tracking and filters</div></div><div class="tr-badge b-live">Live</div></div>
+    <div class="tool-row" onclick="goTo('pg-habits')"><div class="tr-icon" style="background:rgba(251,146,60,.08)">&#128293;</div><div class="tr-info"><div class="tr-name">Habit Tracker</div><div class="tr-desc">Daily habits with streaks and heatmap</div></div><div class="tr-badge b-live">Live</div></div>
+    <div class="tool-row" onclick="goTo('pg-pomodoro')"><div class="tr-icon" style="background:rgba(56,189,248,.07)">&#127829;</div><div class="tr-info"><div class="tr-name">Pomodoro Timer</div><div class="tr-desc">Focus sessions with break reminders</div></div><div class="tr-badge b-live">Live</div></div>
+    <div class="tool-row" onclick="goTo('pg-calendar')"><div class="tr-icon" style="background:rgba(244,114,182,.07)">&#128197;</div><div class="tr-info"><div class="tr-name">Calendar</div><div class="tr-desc">Monthly view with event management</div></div><div class="tr-badge b-live">Live</div></div>
+    <div class="tool-row" onclick="goTo('pg-mindmap')"><div class="tr-icon" style="background:rgba(74,222,128,.07)">&#129504;</div><div class="tr-info"><div class="tr-name">Mind Map</div><div class="tr-desc">Visual canvas to connect and organize ideas</div></div><div class="tr-badge b-live">Live</div></div>
+  </div>
+</div>
+
+<!-- NOTES -->
+<div id="pg-notes" class="page">
+  <div class="back-header"><button class="back-btn" onclick="goTo('pg-productivity')">&#8592;</button><div class="back-title">&#128221; Notes</div><button id="new-note-btn" style="margin-left:auto;background:var(--red);border:none;border-radius:100px;padding:8px 16px;font-family:DM Sans,sans-serif;font-size:13px;font-weight:800;color:#fff;cursor:pointer">+ New</button></div>
+  <div class="notes-list" id="notes-list"></div>
+</div>
+<div id="pg-note-edit" class="page">
+  <div class="back-header"><button class="back-btn" onclick="saveNote()">&#8592;</button><div class="back-title" id="note-edit-title">New Note</div><button onclick="saveNote()" style="margin-left:auto;background:var(--red);border:none;border-radius:100px;padding:8px 16px;font-family:DM Sans,sans-serif;font-size:13px;font-weight:800;color:#fff;cursor:pointer">Save</button></div>
+  <div class="note-editor"><input class="note-title-input" id="note-title-input" placeholder="Title" type="text"/><textarea class="note-body-input" id="note-body-input" placeholder="Start writing..."></textarea></div>
+</div>
+
+<!-- TODO -->
+<div id="pg-todo" class="page">
+  <div class="back-header"><button class="back-btn" onclick="goTo('pg-productivity')">&#8592;</button><div class="back-title">&#9989; To-Do</div></div>
+  <div class="todo-input-row"><input class="todo-input" id="todo-input" placeholder="Add a task..." onkeydown="if(event.key==='Enter')addTodo()"/><button class="todo-add-btn" onclick="addTodo()">+</button></div>
+  <div class="todo-filters"><button class="todo-filter active" onclick="setTodoFilter('all',this)">All</button><button class="todo-filter" onclick="setTodoFilter('active',this)">Active</button><button class="todo-filter" onclick="setTodoFilter('done',this)">Done</button></div>
+  <div class="todo-list" id="todo-list"></div>
+</div>
+
+<!-- HABITS -->
+<div id="pg-habits" class="page">
+  <div class="back-header"><button class="back-btn" onclick="goTo('pg-productivity')">&#8592;</button><div class="back-title">&#128293; Habits</div></div>
+  <div class="todo-input-row"><input class="todo-input" id="habit-input" placeholder="Add a habit..." onkeydown="if(event.key==='Enter')addHabit()"/><button class="todo-add-btn" onclick="addHabit()">+</button></div>
+  <div class="heatmap-wrap"><div class="heatmap-title">Last 28 Days</div><div class="heatmap-grid" id="heatmap-grid"></div></div>
+  <div class="habit-list" id="habit-list"></div>
+</div>
+
+<!-- POMODORO -->
+<div id="pg-pomodoro" class="page">
+  <div class="back-header"><button class="back-btn" onclick="goTo('pg-productivity')">&#8592;</button><div class="back-title">&#127829; Pomodoro</div></div>
+  <div class="pomo-wrap">
+    <div class="pomo-modes">
+      <button class="pomo-mode active" onclick="setPomoMode('focus',this)">Focus</button>
+      <button class="pomo-mode" onclick="setPomoMode('short',this)">Short Break</button>
+      <button class="pomo-mode" onclick="setPomoMode('long',this)">Long Break</button>
+    </div>
+    <div class="pomo-ring">
+      <svg class="pomo-svg" width="220" height="220" viewBox="0 0 220 220">
+        <circle class="pomo-track" cx="110" cy="110" r="100"/>
+        <circle class="pomo-progress" id="pomo-ring" cx="110" cy="110" r="100"/>
+      </svg>
+      <div class="pomo-center"><div class="pomo-time" id="pomo-time">25:00</div><div class="pomo-label" id="pomo-label">Focus</div></div>
+    </div>
+    <div class="pomo-controls">
+      <button class="pomo-btn sec" onclick="resetPomo()">&#8635;</button>
+      <button class="pomo-btn main" id="pomo-play" onclick="togglePomo()">&#9654;</button>
+      <button class="pomo-btn sec" onclick="skipPomo()">&#9197;</button>
+    </div>
+    <div class="pomo-stats">
+      <div class="pomo-stat"><div class="pomo-stat-val" id="pomo-sessions">0</div><div class="pomo-stat-lbl">Sessions</div></div>
+      <div class="pomo-stat"><div class="pomo-stat-val" id="pomo-focused">0m</div><div class="pomo-stat-lbl">Focused</div></div>
+      <div class="pomo-stat"><div class="pomo-stat-val" id="pomo-breaks">0</div><div class="pomo-stat-lbl">Breaks</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- CALENDAR -->
+<div id="pg-calendar" class="page">
+  <div class="back-header"><button class="back-btn" onclick="goTo('pg-productivity')">&#8592;</button><div class="back-title">&#128197; Calendar</div></div>
+  <div class="cal-wrap">
+    <div class="cal-nav"><button class="cal-nav-btn" onclick="changeMonth(-1)">&#8249;</button><div class="cal-month" id="cal-month-label"></div><button class="cal-nav-btn" onclick="changeMonth(1)">&#8250;</button></div>
+    <div class="cal-grid" id="cal-grid"></div>
+    <div class="event-section">
+      <div class="event-section-title" id="event-section-title">Select a day to see events</div>
+      <div class="event-input-row" id="event-input-row"><input class="todo-input" id="event-input" placeholder="Event name..." style="font-size:13px"/><input class="todo-input" id="event-time" placeholder="Time" style="width:80px;flex:none;font-size:13px"/><button class="todo-add-btn" onclick="addEvent()" style="width:42px;height:42px;font-size:16px;border-radius:12px">+</button></div>
+      <div id="event-list"></div>
+    </div>
+  </div>
+</div>
+
+<!-- MIND MAP -->
+<div id="pg-mindmap" class="page">
+  <div class="back-header"><button class="back-btn" onclick="goTo('pg-productivity')">&#8592;</button><div class="back-title">&#129504; Mind Map</div></div>
+  <div class="mindmap-wrap">
+    <div class="mm-canvas-wrap"><canvas class="mm-canvas" id="mm-canvas"></canvas></div>
+    <div class="mm-input-row"><input class="todo-input" id="mm-input" placeholder="Node label..." style="font-size:13px"/><button class="todo-add-btn" onclick="addNode()" style="width:48px;height:48px;border-radius:14px;font-size:16px">+</button></div>
+    <div class="mm-toolbar">
+      <button class="mm-btn" onclick="mmConnect()">Connect</button>
+      <button class="mm-btn" onclick="mmClear()">Clear All</button>
+      <button class="mm-btn" onclick="mmExport()">Export PNG</button>
+    </div>
+    <div class="status" id="st-mm" style="margin:10px 0 0"></div>
+  </div>
+</div>
+
+
+<!-- ══════════════════ MEDIA STUDIO ══════════════════ -->
+<div id="pg-media" class="page">
+  <div class="back-header"><button class="back-btn" onclick="goTo('pg-home')">&#8592;</button><div class="back-title">&#128444;&#65039; Media Studio</div></div>
+  <div class="section-block" style="padding-bottom:20px">
+    <div class="sb-label">Download</div>
+    <div class="tool-row" onclick="goTo('pg-video-dl')">
+      <div class="tr-icon" style="background:rgba(255,210,60,.08)">&#9654;&#65039;</div>
+      <div class="tr-info"><div class="tr-name">Video Downloader</div><div class="tr-desc">Batch download videos in any quality and format</div></div>
+      <div class="tr-badge b-live">Live</div>
+    </div>
+    <div class="tool-row" onclick="goTo('pg-audio-dl')">
+      <div class="tr-icon" style="background:rgba(255,210,60,.08)">&#127925;</div>
+      <div class="tr-info"><div class="tr-name">Audio Downloader</div><div class="tr-desc">Extract audio as MP3, WAV or M4A</div></div>
+      <div class="tr-badge b-live">Live</div>
+    </div>
+    <div class="tool-row" onclick="goTo('pg-webcapture')">
+      <div class="tr-icon" style="background:rgba(255,210,60,.08)">&#127760;</div>
+      <div class="tr-info"><div class="tr-name">Web Capture</div><div class="tr-desc">Detect and grab embedded videos from any webpage</div></div>
+      <div class="tr-badge b-live">Live</div>
+    </div>
+    <div class="sb-label" style="margin-top:20px">Manage</div>
+    <div class="tool-row" onclick="goTo('pg-queue')">
+      <div class="tr-icon" style="background:rgba(255,210,60,.08)">&#128203;</div>
+      <div class="tr-info">
+        <div class="tr-name">Queue</div>
+        <div class="tr-desc">Active and pending downloads</div>
+      </div>
+      <div id="queue-badge" class="tr-badge b-live" style="display:none">0</div>
+    </div>
+    <div class="tool-row" onclick="goTo('pg-history')">
+      <div class="tr-icon" style="background:rgba(255,210,60,.08)">&#128336;</div>
+      <div class="tr-info"><div class="tr-name">History</div><div class="tr-desc">All your past downloads</div></div>
+      <div class="tr-badge b-soon">Local</div>
+    </div>
+  </div>
+</div>
+
+<!-- VIDEO DOWNLOADER -->
+<div id="pg-video-dl" class="page">
+  <div class="back-header"><button class="back-btn" onclick="goTo('pg-media')">&#8592;</button><div class="back-title">&#9654;&#65039; Video Downloader</div></div>
+  <div class="tool-page-header"><div class="tph-sub">Paste one or more video URLs. Pick format and quality, then add to queue.</div></div>
+
+  <div class="media-notice">
+    <span>&#9889;</span>
+    <span>Downloads run via the backend server. Make sure it is connected after deployment.</span>
+  </div>
+
+  <!-- URL Input -->
+  <div class="url-input-wrap">
+    <div class="url-input-label">Video URLs</div>
+    <textarea class="url-textarea" id="video-urls" placeholder="Paste URLs here, one per line&#10;&#10;https://youtube.com/watch?v=...&#10;https://youtube.com/watch?v=..."></textarea>
+    <div class="url-count" id="video-url-count">0 URLs</div>
+  </div>
+
+  <!-- Format + Quality -->
+  <div class="media-options">
+    <div class="media-opt-group">
+      <div class="media-opt-label">Format</div>
+      <div class="media-opt-row" id="video-format-row">
+        <button class="media-opt-btn active" onclick="setOpt('video-format-row',this,'mp4')">MP4</button>
+        <button class="media-opt-btn" onclick="setOpt('video-format-row',this,'webm')">WebM</button>
+        <button class="media-opt-btn" onclick="setOpt('video-format-row',this,'mkv')">MKV</button>
+        <button class="media-opt-btn" onclick="setOpt('video-format-row',this,'mov')">MOV</button>
+      </div>
+    </div>
+    <div class="media-opt-group">
+      <div class="media-opt-label">Quality</div>
+      <div class="media-opt-row" id="video-quality-row">
+        <button class="media-opt-btn" onclick="setOpt('video-quality-row',this,'2160p')">4K</button>
+        <button class="media-opt-btn" onclick="setOpt('video-quality-row',this,'1080p')">1080p</button>
+        <button class="media-opt-btn active" onclick="setOpt('video-quality-row',this,'720p')">720p</button>
+        <button class="media-opt-btn" onclick="setOpt('video-quality-row',this,'480p')">480p</button>
+        <button class="media-opt-btn" onclick="setOpt('video-quality-row',this,'360p')">360p</button>
+        <button class="media-opt-btn" onclick="setOpt('video-quality-row',this,'best')">Best</button>
+      </div>
+    </div>
+    <div class="media-opt-group">
+      <div class="media-opt-label">Subtitles</div>
+      <div class="media-opt-row" id="video-sub-row">
+        <button class="media-opt-btn active" onclick="setOpt('video-sub-row',this,'none')">None</button>
+        <button class="media-opt-btn" onclick="setOpt('video-sub-row',this,'embed')">Embed</button>
+        <button class="media-opt-btn" onclick="setOpt('video-sub-row',this,'srt')">SRT File</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="status" id="st-video-dl"></div>
+  <button class="run-btn" id="rb-video-dl" onclick="addToQueue('video')">Add to Queue</button>
+</div>
+
+<!-- AUDIO DOWNLOADER -->
+<div id="pg-audio-dl" class="page">
+  <div class="back-header"><button class="back-btn" onclick="goTo('pg-media')">&#8592;</button><div class="back-title">&#127925; Audio Downloader</div></div>
+  <div class="tool-page-header"><div class="tph-sub">Extract audio from any video URL. Supports YouTube, SoundCloud and more.</div></div>
+
+  <div class="media-notice">
+    <span>&#9889;</span>
+    <span>Downloads run via the backend server. Make sure it is connected after deployment.</span>
+  </div>
+
+  <div class="url-input-wrap">
+    <div class="url-input-label">Video / Audio URLs</div>
+    <textarea class="url-textarea" id="audio-urls" placeholder="Paste URLs here, one per line&#10;&#10;https://youtube.com/watch?v=...&#10;https://soundcloud.com/..."></textarea>
+    <div class="url-count" id="audio-url-count">0 URLs</div>
+  </div>
+
+  <div class="media-options">
+    <div class="media-opt-group">
+      <div class="media-opt-label">Format</div>
+      <div class="media-opt-row" id="audio-format-row">
+        <button class="media-opt-btn active" onclick="setOpt('audio-format-row',this,'mp3')">MP3</button>
+        <button class="media-opt-btn" onclick="setOpt('audio-format-row',this,'wav')">WAV</button>
+        <button class="media-opt-btn" onclick="setOpt('audio-format-row',this,'m4a')">M4A</button>
+        <button class="media-opt-btn" onclick="setOpt('audio-format-row',this,'flac')">FLAC</button>
+        <button class="media-opt-btn" onclick="setOpt('audio-format-row',this,'ogg')">OGG</button>
+      </div>
+    </div>
+    <div class="media-opt-group">
+      <div class="media-opt-label">Quality</div>
+      <div class="media-opt-row" id="audio-quality-row">
+        <button class="media-opt-btn" onclick="setOpt('audio-quality-row',this,'320k')">320K</button>
+        <button class="media-opt-btn active" onclick="setOpt('audio-quality-row',this,'192k')">192K</button>
+        <button class="media-opt-btn" onclick="setOpt('audio-quality-row',this,'128k')">128K</button>
+        <button class="media-opt-btn" onclick="setOpt('audio-quality-row',this,'best')">Best</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="status" id="st-audio-dl"></div>
+  <button class="run-btn" id="rb-audio-dl" onclick="addToQueue('audio')">Add to Queue</button>
+</div>
+
+<!-- WEB CAPTURE -->
+<div id="pg-webcapture" class="page">
+  <div class="back-header"><button class="back-btn" onclick="goTo('pg-media')">&#8592;</button><div class="back-title">&#127760; Web Capture</div></div>
+  <div class="tool-page-header"><div class="tph-sub">Paste a webpage URL and we will scan it for embedded videos you can download.</div></div>
+
+  <div class="media-notice">
+    <span>&#9889;</span>
+    <span>Scans the page source for embedded video sources, iframes and stream URLs.</span>
+  </div>
+
+  <div class="url-input-wrap">
+    <div class="url-input-label">Webpage URL</div>
+    <input class="url-single-input" id="webcap-url" type="url" placeholder="https://example.com/page-with-video"/>
+  </div>
+
+  <div class="media-options">
+    <div class="media-opt-group">
+      <div class="media-opt-label">Scan for</div>
+      <div class="media-opt-row" id="webcap-type-row">
+        <button class="media-opt-btn active" onclick="setOpt('webcap-type-row',this,'all')">All Media</button>
+        <button class="media-opt-btn" onclick="setOpt('webcap-type-row',this,'video')">Video Only</button>
+        <button class="media-opt-btn" onclick="setOpt('webcap-type-row',this,'audio')">Audio Only</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="status" id="st-webcap"></div>
+  <button class="run-btn" onclick="scanWebpage()">Scan Page</button>
+
+  <!-- Results -->
+  <div id="webcap-results"></div>
+</div>
+
+<!-- QUEUE -->
+<div id="pg-queue" class="page">
+  <div class="back-header"><button class="back-btn" onclick="goTo('pg-media')">&#8592;</button><div class="back-title">&#128203; Queue</div></div>
+  <div class="tool-page-header"><div class="tph-sub">Active and pending downloads. Items process one at a time.</div></div>
+  <div id="queue-list" style="padding:12px 20px 0;display:flex;flex-direction:column;gap:10px"></div>
+</div>
+
+<!-- HISTORY -->
+<div id="pg-history" class="page">
+  <div class="back-header">
+    <button class="back-btn" onclick="goTo('pg-media')">&#8592;</button>
+    <div class="back-title">&#128336; History</div>
+    <button onclick="clearHistory()" style="margin-left:auto;background:none;border:1px solid rgba(230,168,23,.3);border-radius:100px;padding:7px 14px;font-family:DM Sans,sans-serif;font-size:12px;font-weight:700;color:var(--red);cursor:pointer">Clear</button>
+  </div>
+  <div id="history-list" style="padding:12px 20px 0;display:flex;flex-direction:column;gap:10px"></div>
+</div>
+
+
+<!-- ══════════════════ BROWSER ══════════════════ -->
+<div id="pg-browser" class="page">
+  <div style="padding:52px 20px 0;display:flex;align-items:center;gap:8px;position:sticky;top:0;z-index:50;background:linear-gradient(to bottom,var(--bg) 80%,transparent);padding-bottom:14px">
+    <button onclick="browserGoBack()" style="width:38px;height:38px;border-radius:50%;background:var(--surface);border:1px solid rgba(139,148,158,.2);display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;flex-shrink:0;color:var(--sage)">&#8592;</button>
+    <div style="flex:1;display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid rgba(139,148,158,.25);border-radius:100px;padding:10px 16px">
+      <span style="font-size:14px">&#127760;</span>
+      <input id="browser-url" type="url" placeholder="Enter URL or search..." style="flex:1;background:none;border:none;outline:none;font-family:DM Sans,sans-serif;font-size:13px;font-weight:700;color:var(--white)" onkeydown="if(event.key==='Enter')loadBrowser()"/>
+      <button onclick="loadBrowser()" style="background:none;border:none;color:var(--sage);font-size:16px;cursor:pointer">&#8594;</button>
+    </div>
+    <button onclick="reloadBrowser()" style="width:38px;height:38px;border-radius:50%;background:var(--surface);border:1px solid rgba(139,148,158,.2);display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;flex-shrink:0;color:var(--sage)">&#8635;</button>
+  </div>
+
+  <!-- Video detected bar -->
+  <div id="browser-video-bar" style="display:none;margin:0 20px 0;background:rgba(230,168,23,.1);border:1px solid rgba(230,168,23,.3);border-radius:var(--r16);padding:10px 14px;display:none;align-items:center;gap:10px">
+    <span style="font-size:16px">&#9654;&#65039;</span>
+    <div style="flex:1">
+      <div style="font-size:12px;font-weight:800;color:var(--white)">Video detected</div>
+      <div style="font-size:10px;color:var(--sage);margin-top:1px" id="browser-video-url">Tap to download</div>
+    </div>
+    <button onclick="downloadDetectedVideo()" style="background:var(--red);border:none;border-radius:100px;padding:7px 14px;font-family:DM Sans,sans-serif;font-size:12px;font-weight:800;color:#fff;cursor:pointer">Download</button>
+  </div>
+
+  <!-- Webview -->
+  <div id="browser-frame-wrap" style="margin:10px 0 0;height:calc(100vh - 180px);background:var(--surface);position:relative">
+    <div id="browser-placeholder" style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:16px;padding:40px 20px">
+      <div style="font-size:48px">&#127760;</div>
+      <div style="font-size:18px;font-weight:900;color:var(--white);text-align:center">In-App Browser</div>
+      <div style="font-size:13px;color:var(--sage);text-align:center;line-height:1.6">Go to any site with a playing video.<br/>We will detect it and show a download bar.</div>
+      <div style="width:100%;display:flex;flex-direction:column;gap:8px;margin-top:8px">
+        <div style="font-size:10px;font-weight:700;color:var(--sage);text-transform:uppercase;letter-spacing:2px;margin-bottom:4px">Quick Access</div>
+        <button onclick="quickNav('https://www.youtube.com')" class="browser-quick-btn">&#128248; YouTube</button>
+        <button onclick="quickNav('https://www.instagram.com')" class="browser-quick-btn">&#128247; Instagram</button>
+        <button onclick="quickNav('https://twitter.com')" class="browser-quick-btn">&#128038; Twitter / X</button>
+        <button onclick="quickNav('https://www.dailymotion.com')" class="browser-quick-btn">&#127916; Dailymotion</button>
+        <button onclick="quickNav('https://www.reddit.com')" class="browser-quick-btn">&#128172; Reddit</button>
+      </div>
+    </div>
+    <iframe id="browser-iframe" style="display:none;width:100%;height:100%;border:none;background:#fff" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-presentation"></iframe>
+  </div>
+</div>
+
+<!-- ══════════════════ SETTINGS ══════════════════ -->
+<div id="pg-settings" class="page">
+  <div class="header">
+    <div>
+      <div class="h-eyebrow">Infinity Studio</div>
+      <div class="h-wordmark">Settings</div>
+    </div>
+    <div class="avatar" id="settings-avatar" onclick="changeProfilePic()" title="Tap to change">
+      <img id="settings-profile-img" style="display:none;width:100%;height:100%;object-fit:cover;border-radius:50%"/>
+      <span id="settings-profile-initials">IS</span>
+    </div>
+  </div>
+
+  <div class="section-block">
+    <div class="sb-label">App</div>
+    <div class="settings-item" onclick="toast('Theme toggle coming in native app')">
+      <div class="si-left">
+        <div class="si-icon">&#127769;</div>
+        <div class="si-info"><div class="si-name">Theme</div><div class="si-desc">Dark mode always on</div></div>
+      </div>
+      <div class="si-right">Dark</div>
+    </div>
+    <div class="settings-item" onclick="clearAllData()">
+      <div class="si-left">
+        <div class="si-icon" style="background:rgba(230,168,23,.1)">&#128465;</div>
+        <div class="si-info"><div class="si-name" style="color:var(--red)">Clear All Data</div><div class="si-desc">Wipes notes, tasks, habits, history</div></div>
+      </div>
+      <div class="si-right">&#8594;</div>
+    </div>
+  </div>
+
+  <div class="section-block">
+    <div class="sb-label">My Projects</div>
+    <div id="projects-list">
+      <div class="project-card" onclick="openProject('https://github.com/Runitdamar/infinity-studio')">
+        <div class="proj-icon">&#8734;</div>
+        <div class="proj-info">
+          <div class="proj-name">Infinity Studio</div>
+          <div class="proj-desc">This app — web prototype</div>
+        </div>
+        <div class="proj-arrow">&#8594;</div>
+      </div>
+    </div>
+    <button onclick="addProject()" style="width:calc(100% - 0px);margin-top:10px;padding:14px;background:none;border:2px dashed rgba(139,148,158,.25);border-radius:var(--r24);font-family:DM Sans,sans-serif;font-size:13px;font-weight:700;color:var(--sage);cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='rgba(139,148,158,.5)'" onmouseout="this.style.borderColor='rgba(139,148,158,.25)'">+ Add Project</button>
+  </div>
+
+  <div class="section-block">
+    <div class="sb-label">Download Engine</div>
+    <div class="settings-item" onclick="setBackendUrl()">
+      <div class="si-left">
+        <div class="si-icon">&#9881;&#65039;</div>
+        <div class="si-info"><div class="si-name">Backend URL</div><div class="si-desc" id="backend-url-display">Not set — tap to configure</div></div>
+      </div>
+      <div class="si-right" style="color:var(--red)" id="backend-status">●</div>
+    </div>
+    <div class="settings-item" onclick="toast('Parallel downloads config in native app')">
+      <div class="si-left">
+        <div class="si-icon">&#128257;</div>
+        <div class="si-info"><div class="si-name">Parallel Downloads</div><div class="si-desc">Max simultaneous downloads</div></div>
+      </div>
+      <div class="si-right">5</div>
+    </div>
+    <div class="settings-item" onclick="toast('Thread config in native app')">
+      <div class="si-left">
+        <div class="si-icon">&#9889;</div>
+        <div class="si-info"><div class="si-name">Threads per Download</div><div class="si-desc">Fragments per file (aria2c)</div></div>
+      </div>
+      <div class="si-right">8</div>
+    </div>
+  </div>
+
+  <div class="section-block" style="padding-bottom:20px">
+    <div class="sb-label">About</div>
+    <div class="settings-item">
+      <div class="si-left">
+        <div class="si-icon">&#8734;</div>
+        <div class="si-info"><div class="si-name">Infinity Studio</div><div class="si-desc">Prototype v1.0 — Built with love</div></div>
+      </div>
+    </div>
+    <div class="settings-item" onclick="toast('Native app coming soon')">
+      <div class="si-left">
+        <div class="si-icon">&#128640;</div>
+        <div class="si-info"><div class="si-name">Native App</div><div class="si-desc">React Native version in progress</div></div>
+      </div>
+      <div class="si-right">Soon</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════ PIXEL LAB — IMAGE TOOLS ══════════════════ -->
+<div id="pg-img-compress" class="page">
+  <div class="back-header"><button class="back-btn" onclick="goTo('pg-docs')">&#8592;</button><div class="back-title">&#128247; Image Compressor</div></div>
+  <div class="tool-page-header"><div class="tph-sub">Compress images without visible quality loss. Supports JPG, PNG and WebP.</div></div>
+  <div class="privacy-bar"><span>&#128274;</span><span>Processed locally — files never leave your device.</span></div>
+  <div class="upload-wrap">
+    <div class="upload-zone" onclick="document.getElementById('fi-img-compress').click()">
+      <div class="uz-icon">&#128247;</div>
+      <div class="uz-text">Tap to select images</div>
+      <div class="uz-sub">JPG, PNG, WebP supported</div>
+    </div>
+    <input type="file" id="fi-img-compress" accept="image/*" multiple style="display:none" onchange="handleImgCompress(event)"/>
+  </div>
+  <div class="media-options">
+    <div class="media-opt-group">
+      <div class="media-opt-label">Quality</div>
+      <div class="media-opt-row" id="compress-quality-row">
+        <button class="media-opt-btn" onclick="setOpt('compress-quality-row',this,'0.95')">95%</button>
+        <button class="media-opt-btn active" onclick="setOpt('compress-quality-row',this,'0.80')">80%</button>
+        <button class="media-opt-btn" onclick="setOpt('compress-quality-row',this,'0.60')">60%</button>
+        <button class="media-opt-btn" onclick="setOpt('compress-quality-row',this,'0.40')">40%</button>
+      </div>
+    </div>
+    <div class="media-opt-group">
+      <div class="media-opt-label">Output Format</div>
+      <div class="media-opt-row" id="compress-fmt-row">
+        <button class="media-opt-btn active" onclick="setOpt('compress-fmt-row',this,'same')">Same</button>
+        <button class="media-opt-btn" onclick="setOpt('compress-fmt-row',this,'jpeg')">JPG</button>
+        <button class="media-opt-btn" onclick="setOpt('compress-fmt-row',this,'webp')">WebP</button>
+        <button class="media-opt-btn" onclick="setOpt('compress-fmt-row',this,'png')">PNG</button>
+      </div>
+    </div>
+  </div>
+  <div class="file-list" id="fl-img-compress"></div>
+  <div class="status" id="st-img-compress"></div>
+  <button class="run-btn" id="rb-img-compress" disabled onclick="runImgCompress()">Select images first</button>
+</div>
+
+<div id="pg-img-resize" class="page">
+  <div class="back-header"><button class="back-btn" onclick="goTo('pg-docs')">&#8592;</button><div class="back-title">&#128247; Image Resizer</div></div>
+  <div class="tool-page-header"><div class="tph-sub">Resize to exact pixel dimensions or by percentage. Keeps aspect ratio by default.</div></div>
+  <div class="privacy-bar"><span>&#128274;</span><span>Processed locally — files never leave your device.</span></div>
+  <div class="upload-wrap">
+    <div class="upload-zone" onclick="document.getElementById('fi-img-resize').click()">
+      <div class="uz-icon">&#128247;</div>
+      <div class="uz-text">Tap to select an image</div>
+      <div class="uz-sub">JPG, PNG, WebP supported</div>
+    </div>
+    <input type="file" id="fi-img-resize" accept="image/*" style="display:none" onchange="handleImgResize(event)"/>
+  </div>
+  <div class="opts-panel show" style="margin-top:14px">
+    <div class="opts-title">Dimensions</div>
+    <div class="opt-row"><div class="opt-label">Width (px)</div><input class="opt-input" type="number" id="resize-w" placeholder="e.g. 1920"/></div>
+    <div class="opt-row"><div class="opt-label">Height (px)</div><input class="opt-input" type="number" id="resize-h" placeholder="Leave blank = auto"/></div>
+    <div class="opt-row" style="margin-top:4px">
+      <div class="opt-label" style="font-size:11px">Or scale</div>
+      <div class="media-opt-row" id="resize-scale-row" style="flex-wrap:nowrap">
+        <button class="media-opt-btn" onclick="setScale(25)">25%</button>
+        <button class="media-opt-btn" onclick="setScale(50)">50%</button>
+        <button class="media-opt-btn" onclick="setScale(75)">75%</button>
+        <button class="media-opt-btn" onclick="setScale(200)">2x</button>
+      </div>
+    </div>
+  </div>
+  <div id="resize-preview" style="padding:10px 20px 0;display:none">
+    <div style="font-size:11px;font-weight:700;color:var(--sage);margin-bottom:6px">Preview</div>
+    <img id="resize-img-preview" style="width:100%;border-radius:var(--r16);border:1px solid rgba(139,148,158,.2)"/>
+    <div id="resize-info" style="font-size:11px;color:var(--sage);margin-top:6px;text-align:center"></div>
+  </div>
+  <div class="status" id="st-img-resize"></div>
+  <button class="run-btn" id="rb-img-resize" disabled onclick="runImgResize()">Select an image first</button>
+</div>
+
+<div id="pg-img-crop" class="page">
+  <div class="back-header"><button class="back-btn" onclick="goTo('pg-docs')">&#8592;</button><div class="back-title">&#9986;&#65039; Image Crop</div></div>
+  <div class="tool-page-header"><div class="tph-sub">Crop to exact pixel coordinates or a preset aspect ratio.</div></div>
+  <div class="privacy-bar"><span>&#128274;</span><span>Processed locally — files never leave your device.</span></div>
+  <div class="upload-wrap">
+    <div class="upload-zone" onclick="document.getElementById('fi-img-crop').click()">
+      <div class="uz-icon">&#9986;&#65039;</div>
+      <div class="uz-text">Tap to select an image</div>
+      <div class="uz-sub">JPG, PNG, WebP supported</div>
+    </div>
+    <input type="file" id="fi-img-crop" accept="image/*" style="display:none" onchange="handleImgCrop(event)"/>
+  </div>
+  <div class="media-opt-group" style="padding:14px 20px 0">
+    <div class="media-opt-label">Aspect Ratio</div>
+    <div class="media-opt-row" id="crop-ratio-row">
+      <button class="media-opt-btn active" onclick="setCropRatio(null,this)">Free</button>
+      <button class="media-opt-btn" onclick="setCropRatio(1,this)">1:1</button>
+      <button class="media-opt-btn" onclick="setCropRatio(16/9,this)">16:9</button>
+      <button class="media-opt-btn" onclick="setCropRatio(4/3,this)">4:3</button>
+      <button class="media-opt-btn" onclick="setCropRatio(9/16,this)">9:16</button>
+    </div>
+  </div>
+  <div class="opts-panel show" style="margin-top:14px">
+    <div class="opts-title">Crop Area (px)</div>
+    <div class="opt-row"><div class="opt-label">X offset</div><input class="opt-input" type="number" id="crop-x" placeholder="0" value="0"/></div>
+    <div class="opt-row"><div class="opt-label">Y offset</div><input class="opt-input" type="number" id="crop-y" placeholder="0" value="0"/></div>
+    <div class="opt-row"><div class="opt-label">Width</div><input class="opt-input" type="number" id="crop-w" placeholder="e.g. 800"/></div>
+    <div class="opt-row"><div class="opt-label">Height</div><input class="opt-input" type="number" id="crop-h" placeholder="e.g. 600"/></div>
+  </div>
+  <div id="crop-preview" style="padding:10px 20px 0;display:none">
+    <div style="font-size:11px;font-weight:700;color:var(--sage);margin-bottom:6px">Source Image</div>
+    <img id="crop-img-preview" style="width:100%;border-radius:var(--r16);border:1px solid rgba(139,148,158,.2)"/>
+    <div id="crop-info" style="font-size:11px;color:var(--sage);margin-top:6px;text-align:center"></div>
+  </div>
+  <div class="status" id="st-img-crop"></div>
+  <button class="run-btn" id="rb-img-crop" disabled onclick="runImgCrop()">Select an image first</button>
+</div>
+
+<div id="pg-img-convert" class="page">
+  <div class="back-header"><button class="back-btn" onclick="goTo('pg-docs')">&#8592;</button><div class="back-title">&#128257; Format Converter</div></div>
+  <div class="tool-page-header"><div class="tph-sub">Convert between image formats. All processing happens in your browser.</div></div>
+  <div class="privacy-bar"><span>&#128274;</span><span>Processed locally — files never leave your device.</span></div>
+  <div class="upload-wrap">
+    <div class="upload-zone" onclick="document.getElementById('fi-img-convert').click()">
+      <div class="uz-icon">&#128257;</div>
+      <div class="uz-text">Tap to select images</div>
+      <div class="uz-sub">JPG, PNG, WebP, GIF, BMP supported</div>
+    </div>
+    <input type="file" id="fi-img-convert" accept="image/*" multiple style="display:none" onchange="handleImgConvert(event)"/>
+  </div>
+  <div class="media-options">
+    <div class="media-opt-group">
+      <div class="media-opt-label">Convert To</div>
+      <div class="media-opt-row" id="imgconv-fmt-row">
+        <button class="media-opt-btn active" onclick="setOpt('imgconv-fmt-row',this,'jpeg')">JPG</button>
+        <button class="media-opt-btn" onclick="setOpt('imgconv-fmt-row',this,'png')">PNG</button>
+        <button class="media-opt-btn" onclick="setOpt('imgconv-fmt-row',this,'webp')">WebP</button>
+        <button class="media-opt-btn" onclick="setOpt('imgconv-fmt-row',this,'bmp')">BMP</button>
+      </div>
+    </div>
+  </div>
+  <div class="file-list" id="fl-img-convert"></div>
+  <div class="status" id="st-img-convert"></div>
+  <button class="run-btn" id="rb-img-convert" disabled onclick="runImgConvert()">Select images first</button>
+</div>
+
+
+<!-- ══════════════════ IMAGE ENHANCER ══════════════════ -->
+<div id="pg-img-enhance" class="page">
+  <div class="back-header"><button class="back-btn" onclick="goTo('pg-docs')">&#8592;</button><div class="back-title">&#10024; Image Enhancer</div></div>
+  <div class="tool-page-header"><div class="tph-sub">Adjust brightness, contrast, saturation and sharpness. Real-time preview.</div></div>
+  <div class="privacy-bar"><span>&#128274;</span><span>Processed locally — files never leave your device.</span></div>
+
+  <div class="upload-wrap">
+    <div class="upload-zone" id="enhance-zone" onclick="document.getElementById('fi-enhance').click()">
+      <div class="uz-icon">&#10024;</div>
+      <div class="uz-text">Tap to select an image</div>
+      <div class="uz-sub">JPG, PNG, WebP supported</div>
+    </div>
+    <input type="file" id="fi-enhance" accept="image/*" style="display:none" onchange="handleEnhance(event)"/>
+  </div>
+
+  <!-- Preview -->
+  <div id="enhance-preview-wrap" style="display:none;padding:12px 20px 0">
+    <div style="position:relative;border-radius:var(--r24);overflow:hidden;border:1px solid rgba(139,148,158,.2)">
+      <canvas id="enhance-canvas" style="width:100%;display:block"></canvas>
+    </div>
+    <div id="enhance-dims" style="font-size:11px;color:var(--sage);text-align:center;margin-top:6px"></div>
+  </div>
+
+  <!-- Sliders -->
+  <div id="enhance-sliders" style="display:none;padding:14px 20px 0">
+    <div class="enhance-slider-group">
+      <div class="enhance-slider-label"><span>&#9728;&#65039; Brightness</span><span id="val-brightness">100%</span></div>
+      <input type="range" class="enhance-slider" id="sl-brightness" min="0" max="200" value="100" oninput="applyEnhance()"/>
+    </div>
+    <div class="enhance-slider-group">
+      <div class="enhance-slider-label"><span>&#127774; Contrast</span><span id="val-contrast">100%</span></div>
+      <input type="range" class="enhance-slider" id="sl-contrast" min="0" max="200" value="100" oninput="applyEnhance()"/>
+    </div>
+    <div class="enhance-slider-group">
+      <div class="enhance-slider-label"><span>&#127752; Saturation</span><span id="val-saturation">100%</span></div>
+      <input type="range" class="enhance-slider" id="sl-saturation" min="0" max="200" value="100" oninput="applyEnhance()"/>
+    </div>
+    <div class="enhance-slider-group">
+      <div class="enhance-slider-label"><span>&#128261; Sharpness</span><span id="val-sharpness">0</span></div>
+      <input type="range" class="enhance-slider" id="sl-sharpness" min="0" max="10" value="0" oninput="applyEnhance()"/>
+    </div>
+    <div class="enhance-slider-group">
+      <div class="enhance-slider-label"><span>&#127756; Blur</span><span id="val-blur">0px</span></div>
+      <input type="range" class="enhance-slider" id="sl-blur" min="0" max="20" value="0" oninput="applyEnhance()"/>
+    </div>
+    <div class="enhance-slider-group">
+      <div class="enhance-slider-label"><span>&#127758; Hue</span><span id="val-hue">0deg</span></div>
+      <input type="range" class="enhance-slider" id="sl-hue" min="0" max="360" value="0" oninput="applyEnhance()"/>
+    </div>
+    <button onclick="resetEnhance()" style="width:100%;padding:12px;background:none;border:1px solid rgba(139,148,158,.25);border-radius:var(--r16);font-family:DM Sans,sans-serif;font-size:13px;font-weight:700;color:var(--sage);cursor:pointer;margin-top:4px">Reset All</button>
+  </div>
+
+  <div class="status" id="st-img-enhance"></div>
+  <button class="run-btn" id="rb-img-enhance" disabled onclick="downloadEnhanced()">Select an image first</button>
+</div>
+
+<!-- ══════════════════ VIDEO TO FRAMES ══════════════════ -->
+<div id="pg-vid-frames" class="page">
+  <div class="back-header"><button class="back-btn" onclick="goTo('pg-docs')">&#8592;</button><div class="back-title">&#127916; Video to Frames</div></div>
+  <div class="tool-page-header"><div class="tph-sub">Upload a video file and extract frames as PNG images. Choose how many frames per second to capture.</div></div>
+  <div class="privacy-bar"><span>&#128274;</span><span>Processed locally — files never leave your device.</span></div>
+
+  <div class="upload-wrap">
+    <div class="upload-zone" onclick="document.getElementById('fi-vid-frames').click()">
+      <div class="uz-icon">&#127916;</div>
+      <div class="uz-text">Tap to select a video</div>
+      <div class="uz-sub">MP4, WebM, MOV supported</div>
+    </div>
+    <input type="file" id="fi-vid-frames" accept="video/*" style="display:none" onchange="handleVidFrames(event)"/>
+  </div>
+
+  <!-- YouTube URL -->
+  <div style="padding:10px 20px 0">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px">
+      <div style="flex:1;height:1px;background:rgba(139,148,158,.2)"></div>
+      <span style="font-size:11px;font-weight:700;color:var(--sage)">OR</span>
+      <div style="flex:1;height:1px;background:rgba(139,148,158,.2)"></div>
+    </div>
+    <div class="media-notice" style="margin:8px 0 0">
+      <span>&#128279;</span>
+      <span>YouTube URL extraction requires backend (available after deployment)</span>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:8px">
+      <input class="url-single-input" id="yt-frames-url" placeholder="https://youtube.com/watch?v=..." style="flex:1"/>
+      <button onclick="toast('YouTube frame extraction needs backend — coming after deployment')" style="background:var(--surface);border:1px solid rgba(139,148,158,.25);border-radius:var(--r16);padding:0 16px;font-family:DM Sans,sans-serif;font-size:13px;font-weight:700;color:var(--sage);cursor:pointer;white-space:nowrap">Extract</button>
+    </div>
+  </div>
+
+  <div class="media-options" style="padding-top:14px">
+    <div class="media-opt-group">
+      <div class="media-opt-label">Frames per second</div>
+      <div class="media-opt-row" id="frames-fps-row">
+        <button class="media-opt-btn" onclick="setOpt('frames-fps-row',this,'0.5')">1 per 2s</button>
+        <button class="media-opt-btn active" onclick="setOpt('frames-fps-row',this,'1')">1 per sec</button>
+        <button class="media-opt-btn" onclick="setOpt('frames-fps-row',this,'2')">2 per sec</button>
+        <button class="media-opt-btn" onclick="setOpt('frames-fps-row',this,'5')">5 per sec</button>
+        <button class="media-opt-btn" onclick="setOpt('frames-fps-row',this,'all')">All frames</button>
+      </div>
+    </div>
+    <div class="media-opt-group">
+      <div class="media-opt-label">Output format</div>
+      <div class="media-opt-row" id="frames-fmt-row">
+        <button class="media-opt-btn active" onclick="setOpt('frames-fmt-row',this,'image/png')">PNG</button>
+        <button class="media-opt-btn" onclick="setOpt('frames-fmt-row',this,'image/jpeg')">JPG</button>
+        <button class="media-opt-btn" onclick="setOpt('frames-fmt-row',this,'image/webp')">WebP</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Video preview -->
+  <div id="vid-frames-preview" style="display:none;padding:12px 20px 0">
+    <video id="vid-frames-player" style="width:100%;border-radius:var(--r24);border:1px solid rgba(139,148,158,.2)" controls></video>
+    <div id="vid-frames-info" style="font-size:11px;color:var(--sage);text-align:center;margin-top:6px"></div>
+  </div>
+
+  <!-- Extracted frames grid -->
+  <div id="frames-grid" style="padding:10px 20px 0;display:grid;grid-template-columns:repeat(3,1fr);gap:8px"></div>
+
+  <div class="prog-wrap" id="pw-vid-frames">
+    <div class="prog-top"><span id="pt-vid-frames">Extracting frames...</span><span id="pp-vid-frames">0%</span></div>
+    <div class="prog-track"><div class="prog-fill" id="pf-vid-frames"></div></div>
+  </div>
+  <div class="status" id="st-vid-frames"></div>
+  <button class="run-btn" id="rb-vid-frames" disabled onclick="runVidFrames()">Select a video first</button>
+</div>
+
+<!-- PREVIEW DRAWER -->
+<div class="preview-overlay" id="preview-overlay" onclick="maybeClosePreview(event)">
+  <div class="preview-drawer">
+    <div class="preview-handle"></div>
+    <div class="preview-header"><div class="preview-title">Live Preview</div><button class="preview-close" onclick="closePreview()">X</button></div>
+    <iframe class="preview-iframe" id="preview-iframe" sandbox="allow-scripts allow-modals"></iframe>
+  </div>
+</div>
+
+<!-- FLOATING NAV -->
+<nav class="fnav">
+  <button class="fn-btn" id="nav-docs" onclick="goTo('pg-docs')">&#128196;</button>
+  <button class="fn-btn" id="nav-prod" onclick="goTo('pg-productivity')">&#128640;</button>
+  <button class="fn-fab" id="nav-home" onclick="goTo('pg-home')">&#8734;</button>
+  <button class="fn-btn" id="nav-browser" onclick="goTo('pg-browser')">&#127760;</button>
+  <button class="fn-btn" id="nav-settings" onclick="goTo('pg-settings')">&#9881;&#65039;</button>
+</nav>
+<div class="toast" id="toast"></div>
+<input type="file" id="profile-pic-input" accept="image/*" style="display:none" onchange="applyProfilePic(event)"/>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<script>
+const h=new Date().getHours();
+document.getElementById("greeting").textContent=h<12?"Good Morning":h<17?"Good Afternoon":"Good Evening";
+
+const docPages=["pg-docs","pg-merge","pg-split","pg-compress","pg-rotate","pg-runner","pg-htmlpdf","pg-htmlimg","pg-converter","pg-img-compress","pg-img-resize","pg-img-crop","pg-img-convert","pg-img-enhance","pg-vid-frames"];
+const prodPages=["pg-productivity","pg-notes","pg-note-edit","pg-todo","pg-habits","pg-pomodoro","pg-calendar","pg-mindmap"];
+const mediaPages=["pg-media","pg-video-dl","pg-audio-dl","pg-webcapture","pg-queue","pg-history"];
+const browserPages=["pg-browser"];
+const settingsPages=["pg-settings"];
+
+function goTo(id){
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  const pg=document.getElementById(id);if(pg)pg.classList.add("active");
+  window.scrollTo(0,0);
+  const nh=document.getElementById("nav-home");if(nh)nh.classList.toggle("on",id==="pg-home");
+  const nd=document.getElementById("nav-docs");if(nd)nd.classList.toggle("on",docPages.includes(id));
+  const np=document.getElementById("nav-prod");if(np)np.classList.toggle("on",prodPages.includes(id));
+  const nb=document.getElementById("nav-browser");if(nb)nb.classList.toggle("on",browserPages.includes(id));
+  const ns=document.getElementById("nav-settings");if(ns)ns.classList.toggle("on",settingsPages.includes(id));
+  const nm=document.getElementById("nav-media");if(nm)nm.classList.toggle("on",mediaPages.includes(id));
+  if(id==="pg-queue")renderQueue();
+  if(id==="pg-history")renderHistory();
+  if(id==="pg-notes")renderNotes();
+  if(id==="pg-todo")renderTodos();
+  if(id==="pg-habits"){renderHabits();renderHeatmap();}
+  if(id==="pg-calendar")renderCalendar();
+  if(id==="pg-mindmap")initMindMap();
+}
+
+let tt;
+function toast(msg){const t=document.getElementById("toast");if(!t)return;t.textContent=msg;t.classList.add("show");clearTimeout(tt);tt=setTimeout(()=>t.classList.remove("show"),3000);}
+
+const store=(k,v)=>localStorage.setItem("is_"+k,JSON.stringify(v));
+const load=(k,d)=>{try{const v=JSON.parse(localStorage.getItem("is_"+k));return v!==null?v:d;}catch{return d;}};
+
+// PDF TOOLS
+const files={merge:[],split:[],compress:[],rotate:[],conv:[]};
+function addFiles(tool,e){const f=Array.from(e.target.files);files[tool]=tool==="merge"?[...files[tool],...f]:f;e.target.value="";renderFiles(tool);}
+function removeFile(tool,i){files[tool].splice(i,1);renderFiles(tool);}
+function renderFiles(tool){
+  const list=document.getElementById("fl-"+tool);list.innerHTML="";
+  files[tool].forEach((f,i)=>{
+    const d=document.createElement("div");d.className="file-item";
+    const icon=document.createElement("span");icon.className="fi-icon";icon.textContent="📄";
+    const nm=document.createElement("span");nm.className="fi-name";nm.textContent=f.name;
+    const sz=document.createElement("span");sz.className="fi-size";sz.textContent=(f.size/1024).toFixed(0)+" KB";
+    const rm=document.createElement("button");rm.className="fi-rm";rm.textContent="✕";rm.onclick=()=>removeFile(tool,i);
+    d.appendChild(icon);d.appendChild(nm);d.appendChild(sz);d.appendChild(rm);
+    list.appendChild(d);
+  });
+  updateBtn(tool);
+}
+function updateBtn(tool){
+  const btn=document.getElementById("rb-"+tool);const n=files[tool].length;
+  const lbls={merge:"Merge PDFs",split:"Split PDF",compress:"Compress PDF",rotate:"Rotate PDF",conv:"Convert File"};
+  if(tool==="merge"){btn.disabled=n<2;btn.textContent=n===0?"Add at least 2 PDFs":n===1?"Add one more PDF":"Merge "+n+" PDFs";}
+  else{btn.disabled=n<1;btn.textContent=n<1?"Select a file first":lbls[tool];}
+}
+function setProgress(tool,pct,text){document.getElementById("pw-"+tool).classList.add("show");document.getElementById("pf-"+tool).style.width=pct+"%";document.getElementById("pp-"+tool).textContent=pct+"%";document.getElementById("pt-"+tool).textContent=text||"Processing...";}
+function hideProgress(tool){document.getElementById("pw-"+tool).classList.remove("show");}
+function showStatus(tool,msg,type){const el=document.getElementById("st-"+tool);el.textContent=msg;el.className="status show "+type;}
+function hideStatus(tool){document.getElementById("st-"+tool).className="status";}
+function dl(bytes,name,type="application/pdf"){const blob=new Blob([bytes],{type});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
+
+async function runMerge(){
+  hideStatus("merge");document.getElementById("rb-merge").disabled=true;
+  try{
+    const{PDFDocument}=PDFLib;const merged=await PDFDocument.create();
+    for(let i=0;i<files.merge.length;i++){setProgress("merge",Math.round((i/files.merge.length)*85),"Adding "+files.merge[i].name+"...");const pdf=await PDFDocument.load(await files.merge[i].arrayBuffer());const pages=await merged.copyPages(pdf,pdf.getPageIndices());pages.forEach(p=>merged.addPage(p));}
+    setProgress("merge",92,"Saving...");dl(await merged.save(),"merged.pdf");setProgress("merge",100,"Done!");showStatus("merge","Merged "+files.merge.length+" PDFs successfully","ok");
+  }catch(e){showStatus("merge","Failed - make sure all files are valid PDFs","err");}
+  hideProgress("merge");updateBtn("merge");
+}
+async function runSplit(){
+  hideStatus("split");document.getElementById("rb-split").disabled=true;
+  try{
+    const{PDFDocument}=PDFLib;const pdf=await PDFDocument.load(await files.split[0].arrayBuffer());const total=pdf.getPageCount();
+    const from=parseInt(document.getElementById("sp-from").value)||1;const to=parseInt(document.getElementById("sp-to").value)||total;
+    const start=Math.max(0,from-1);const end=Math.min(total-1,to-1);
+    if(start>end){showStatus("split","Invalid page range","err");updateBtn("split");return;}
+    for(let i=start;i<=end;i++){setProgress("split",Math.round(((i-start)/(end-start+1))*90),"Extracting page "+(i+1)+"...");const np=await PDFDocument.create();np.addPage((await np.copyPages(pdf,[i]))[0]);dl(await np.save(),"page-"+(i+1)+".pdf");}
+    setProgress("split",100,"Done!");showStatus("split","Extracted "+(end-start+1)+" page"+(end-start>0?"s":""),"ok");
+  }catch(e){showStatus("split","Failed - make sure the file is a valid PDF","err");}
+  hideProgress("split");updateBtn("split");
+}
+async function runCompress(){
+  hideStatus("compress");document.getElementById("rb-compress").disabled=true;
+  try{
+    const{PDFDocument}=PDFLib;setProgress("compress",30,"Loading...");const pdf=await PDFDocument.load(await files.compress[0].arrayBuffer());setProgress("compress",70,"Optimizing...");
+    const out=await pdf.save({useObjectStreams:true,addDefaultPage:false,objectsPerTick:50});setProgress("compress",100,"Done!");
+    dl(out,"compressed.pdf");showStatus("compress",(files.compress[0].size/1024).toFixed(0)+" KB to "+(out.length/1024).toFixed(0)+" KB","ok");
+  }catch(e){showStatus("compress","Failed - make sure the file is a valid PDF","err");}
+  hideProgress("compress");updateBtn("compress");
+}
+let rotation=90;
+function setRot(deg){rotation=deg;document.querySelectorAll(".rot-btn").forEach(b=>b.classList.remove("active"));document.getElementById("rb"+deg).classList.add("active");}
+async function runRotate(){
+  hideStatus("rotate");document.getElementById("rb-rotate").disabled=true;
+  try{
+    const{PDFDocument,degrees}=PDFLib;setProgress("rotate",40,"Rotating...");const pdf=await PDFDocument.load(await files.rotate[0].arrayBuffer());
+    pdf.getPages().forEach(p=>p.setRotation(degrees(rotation)));setProgress("rotate",85,"Saving...");dl(await pdf.save(),"rotated.pdf");setProgress("rotate",100,"Done!");showStatus("rotate","All pages rotated "+rotation+" degrees","ok");
+  }catch(e){showStatus("rotate","Failed - make sure the file is a valid PDF","err");}
+  hideProgress("rotate");updateBtn("rotate");
+}
+function runPreview(){const code=document.getElementById("html-code").value.trim();if(!code){toast("Write some HTML first");return;}document.getElementById("preview-iframe").srcdoc=code;document.getElementById("preview-overlay").classList.add("open");document.body.style.overflow="hidden";}
+function closePreview(){document.getElementById("preview-overlay").classList.remove("open");document.body.style.overflow="";}
+function maybeClosePreview(e){if(e.target===document.getElementById("preview-overlay"))closePreview();}
+async function runHtmlToPdf(){const code=document.getElementById("htmlpdf-code").value.trim();if(!code){showStatus("htmlpdf","Paste some HTML first","err");return;}showStatus("htmlpdf","Opening print dialog - select Save as PDF","info");const w=window.open("","_blank");w.document.write(code);w.document.close();setTimeout(()=>w.print(),600);}
+async function runHtmlToImg(){const code=document.getElementById("htmlimg-code").value.trim();if(!code){showStatus("htmlimg","Paste some HTML first","err");return;}showStatus("htmlimg","Opening preview - use browser screenshot for full capture","info");document.getElementById("preview-iframe").srcdoc=code;document.getElementById("preview-overlay").classList.add("open");}
+
+const convMap={pdf:["png","jpg"],html:["pdf"],png:["jpg","webp","bmp"],jpg:["png","webp","bmp"],webp:["png","jpg"],gif:["png","jpg"],bmp:["png","jpg"]};
+function updateConvTo(){const from=document.getElementById("conv-from").value;const toSel=document.getElementById("conv-to");toSel.innerHTML="";(convMap[from]||[]).forEach(o=>{const el=document.createElement("option");el.value=o;el.textContent=o.toUpperCase();toSel.appendChild(el);});files.conv=[];renderFiles("conv");}
+updateConvTo();
+async function runConvert(){
+  const from=document.getElementById("conv-from").value;const to=document.getElementById("conv-to").value;
+  hideStatus("conv");document.getElementById("rb-conv").disabled=true;setProgress("conv",20,"Reading...");
+  try{
+    if(["png","jpg","webp","gif","bmp"].includes(from)&&["png","jpg","webp","bmp"].includes(to)){
+      const url=URL.createObjectURL(files.conv[0]);const img=new Image();
+      img.onload=()=>{setProgress("conv",60,"Converting...");const c=document.createElement("canvas");c.width=img.width;c.height=img.height;c.getContext("2d").drawImage(img,0,0);const mime=to==="jpg"?"image/jpeg":to==="webp"?"image/webp":"image/png";c.toBlob(b=>{const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="converted."+to;a.click();setProgress("conv",100,"Done!");showStatus("conv","Converted to "+to.toUpperCase(),"ok");updateBtn("conv");},mime,0.92);URL.revokeObjectURL(url);};
+      img.src=url;return;
+    }
+    if(from==="html"&&to==="pdf"){const text=await files.conv[0].text();showStatus("conv","Opening print dialog - select Save as PDF","info");const w=window.open("","_blank");w.document.write(text);w.document.close();setTimeout(()=>w.print(),600);hideProgress("conv");updateBtn("conv");return;}
+    showStatus("conv","This conversion is not yet supported in browser","info");
+  }catch(e){showStatus("conv","Conversion failed","err");}
+  hideProgress("conv");updateBtn("conv");
+}
+
+// NOTES
+let editingNoteId=null;
+document.getElementById("new-note-btn").onclick=function(){editingNoteId=null;document.getElementById("note-title-input").value="";document.getElementById("note-body-input").value="";document.getElementById("note-edit-title").textContent="New Note";goTo("pg-note-edit");};
+function renderNotes(){
+  const notes=load("notes",[]);const list=document.getElementById("notes-list");list.innerHTML="";
+  if(!notes.length){list.innerHTML='<div class="empty-state"><div class="empty-icon">📝</div><div class="empty-text">No notes yet. Tap + New to start.</div></div>';return;}
+  notes.slice().reverse().forEach(n=>{
+    const d=document.createElement("div");d.className="note-card";
+    d.innerHTML='<div class="note-title">'+(n.title||"Untitled")+'</div><div class="note-preview">'+(n.body||"")+'</div><div class="note-date">'+new Date(n.id).toLocaleDateString()+'</div>';
+    const rm=document.createElement("button");rm.className="note-delete";rm.textContent="✕";rm.onclick=(e)=>{e.stopPropagation();deleteNote(n.id);};
+    d.appendChild(rm);d.onclick=()=>openNote(n);list.appendChild(d);
+  });
+}
+function openNote(n){editingNoteId=n.id;document.getElementById("note-title-input").value=n.title||"";document.getElementById("note-body-input").value=n.body||"";document.getElementById("note-edit-title").textContent="Edit Note";goTo("pg-note-edit");}
+function saveNote(){
+  const title=document.getElementById("note-title-input").value.trim();const body=document.getElementById("note-body-input").value.trim();
+  if(!title&&!body){goTo("pg-notes");return;}
+  const notes=load("notes",[]);
+  if(editingNoteId){const idx=notes.findIndex(n=>n.id===editingNoteId);if(idx>-1)notes[idx]={id:editingNoteId,title,body};}
+  else notes.push({id:Date.now(),title,body});
+  store("notes",notes);editingNoteId=null;goTo("pg-notes");
+}
+function deleteNote(id){store("notes",load("notes",[]).filter(n=>n.id!==id));renderNotes();}
+
+// TODO
+let todoFilter="all";
+function addTodo(){const input=document.getElementById("todo-input");const text=input.value.trim();if(!text)return;const todos=load("todos",[]);todos.push({id:Date.now(),text,done:false});store("todos",todos);input.value="";renderTodos();}
+function toggleTodo(id){const todos=load("todos",[]);const t=todos.find(t=>t.id===id);if(t)t.done=!t.done;store("todos",todos);renderTodos();}
+function deleteTodo(id){store("todos",load("todos",[]).filter(t=>t.id!==id));renderTodos();}
+function setTodoFilter(f,btn){todoFilter=f;document.querySelectorAll(".todo-filter").forEach(b=>b.classList.remove("active"));btn.classList.add("active");renderTodos();}
+function renderTodos(){
+  const todos=load("todos",[]);const list=document.getElementById("todo-list");list.innerHTML="";
+  const filtered=todos.filter(t=>todoFilter==="all"||(todoFilter==="active"&&!t.done)||(todoFilter==="done"&&t.done));
+  if(!filtered.length){list.innerHTML='<div class="empty-state"><div class="empty-icon">&#9989;</div><div class="empty-text">'+(todoFilter==="done"?"Nothing done yet":"No tasks yet")+'</div></div>';return;}
+  filtered.forEach(t=>{
+    const d=document.createElement("div");d.className="todo-item"+(t.done?" done":"");
+    const chk=document.createElement("button");chk.className="todo-check";chk.innerHTML=t.done?"&#10003;":"";chk.onclick=()=>toggleTodo(t.id);
+    const txt=document.createElement("div");txt.className="todo-text";txt.textContent=t.text;
+    const rm=document.createElement("button");rm.className="todo-rm";rm.textContent="&#10005;";rm.onclick=()=>deleteTodo(t.id);
+    d.appendChild(chk);d.appendChild(txt);d.appendChild(rm);list.appendChild(d);
+  });
+}
+// HABITS
+function addHabit(){const input=document.getElementById("habit-input");const name=input.value.trim();if(!name)return;const habits=load("habits",[]);habits.push({id:Date.now(),name,completions:[]});store("habits",habits);input.value="";renderHabits();renderHeatmap();}
+function toggleHabit(id){const habits=load("habits",[]);const h=habits.find(h=>h.id===id);if(!h)return;const today=new Date().toDateString();const idx=h.completions.indexOf(today);if(idx>-1)h.completions.splice(idx,1);else h.completions.push(today);store("habits",habits);renderHabits();renderHeatmap();}
+function deleteHabit(id){store("habits",load("habits",[]).filter(h=>h.id!==id));renderHabits();renderHeatmap();}
+function getStreak(c){let s=0;const d=new Date();while(c.includes(d.toDateString())){s++;d.setDate(d.getDate()-1);}return s;}
+function renderHabits(){
+  const habits=load("habits",[]);const list=document.getElementById("habit-list");list.innerHTML="";
+  if(!habits.length){list.innerHTML='<div class="empty-state"><div class="empty-icon">🔥</div><div class="empty-text">No habits yet. Add one above.</div></div>';return;}
+  const today=new Date().toDateString();
+  habits.forEach(h=>{
+    const done=h.completions.includes(today);const streak=getStreak(h.completions);
+    const d=document.createElement("div");d.className="habit-card";
+    const iw=document.createElement("div");iw.className="habit-icon-wrap";iw.textContent="🔥";
+    const inf=document.createElement("div");inf.className="habit-info";
+    inf.innerHTML='<div class="habit-name">'+h.name+'</div><div class="habit-streak">'+streak+' day streak</div>';
+    const chk=document.createElement("button");chk.className="habit-check"+(done?" done":"");chk.innerHTML=done?"✓":"";chk.onclick=()=>toggleHabit(h.id);
+    const rm=document.createElement("button");rm.className="habit-rm";rm.textContent="✕";rm.onclick=()=>deleteHabit(h.id);
+    d.appendChild(iw);d.appendChild(inf);d.appendChild(chk);d.appendChild(rm);list.appendChild(d);
+  });
+}
+function renderHeatmap(){
+  const habits=load("habits",[]);const grid=document.getElementById("heatmap-grid");grid.innerHTML="";
+  const allDone=new Set();habits.forEach(h=>h.completions.forEach(c=>allDone.add(c)));
+  for(let i=27;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);const key=d.toDateString();const cell=document.createElement("div");cell.className="hm-cell"+(allDone.has(key)?" done":"")+(i===0?" today":"");grid.appendChild(cell);}
+}
+
+// POMODORO
+const POMO={focus:25*60,short:5*60,long:15*60};
+let pomoMode="focus",pomoLeft=POMO.focus,pomoRunning=false,pomoInterval=null;
+let pomoSessions=load("ps",0),pomoFocused=load("pf",0),pomoBreaks=load("pb",0);
+function updatePomoDisplay(){
+  const m=Math.floor(pomoLeft/60),s=pomoLeft%60;
+  document.getElementById("pomo-time").textContent=String(m).padStart(2,"0")+":"+String(s).padStart(2,"0");
+  const total=POMO[pomoMode],prog=(total-pomoLeft)/total,circ=2*Math.PI*100;
+  document.getElementById("pomo-ring").style.strokeDashoffset=circ-(prog*circ);
+  document.getElementById("pomo-sessions").textContent=pomoSessions;
+  document.getElementById("pomo-focused").textContent=Math.round(pomoFocused/60)+"m";
+  document.getElementById("pomo-breaks").textContent=pomoBreaks;
+}
+function setPomoMode(mode,btn){stopPomo();pomoMode=mode;pomoLeft=POMO[mode];document.querySelectorAll(".pomo-mode").forEach(b=>b.classList.remove("active"));btn.classList.add("active");document.getElementById("pomo-label").textContent=mode==="focus"?"Focus":mode==="short"?"Short Break":"Long Break";document.getElementById("pomo-play").innerHTML="&#9654;";updatePomoDisplay();}
+function togglePomo(){
+  if(pomoRunning){stopPomo();}
+  else{pomoRunning=true;document.getElementById("pomo-play").innerHTML="&#9646;&#9646;";pomoInterval=setInterval(()=>{pomoLeft--;if(pomoMode==="focus")pomoFocused++;updatePomoDisplay();if(pomoLeft<=0){stopPomo();if(pomoMode==="focus"){pomoSessions++;store("ps",pomoSessions);}else{pomoBreaks++;store("pb",pomoBreaks);}store("pf",pomoFocused);toast(pomoMode==="focus"?"Session done! Take a break.":"Break done! Time to focus.");}},1000);}
+}
+function stopPomo(){pomoRunning=false;clearInterval(pomoInterval);document.getElementById("pomo-play").innerHTML="&#9654;";store("pf",pomoFocused);}
+function resetPomo(){stopPomo();pomoLeft=POMO[pomoMode];updatePomoDisplay();}
+function skipPomo(){stopPomo();pomoLeft=0;updatePomoDisplay();}
+updatePomoDisplay();
+
+// CALENDAR
+let calDate=new Date(),selectedDay=null;
+function changeMonth(dir){calDate=new Date(calDate.getFullYear(),calDate.getMonth()+dir,1);renderCalendar();}
+function renderCalendar(){
+  const events=load("events",{});const year=calDate.getFullYear(),month=calDate.getMonth();
+  document.getElementById("cal-month-label").textContent=calDate.toLocaleDateString("en",{month:"long",year:"numeric"});
+  const grid=document.getElementById("cal-grid");grid.innerHTML="";
+  ["Su","Mo","Tu","We","Th","Fr","Sa"].forEach(d=>{const el=document.createElement("div");el.className="cal-day-name";el.textContent=d;grid.appendChild(el);});
+  const first=new Date(year,month,1).getDay(),daysInMonth=new Date(year,month+1,0).getDate(),prevDays=new Date(year,month,0).getDate();
+  const today=new Date();
+  for(let i=0;i<first;i++){const el=document.createElement("div");el.className="cal-day other-month";el.textContent=prevDays-first+i+1;grid.appendChild(el);}
+  for(let d=1;d<=daysInMonth;d++){
+    const el=document.createElement("div");el.className="cal-day";
+    const key=year+"-"+(month+1)+"-"+d;
+    if(today.getDate()===d&&today.getMonth()===month&&today.getFullYear()===year)el.classList.add("today");
+    if(selectedDay===key)el.classList.add("selected");
+    if(events[key]&&events[key].length)el.classList.add("has-event");
+    el.textContent=d;el.onclick=()=>selectDay(key);grid.appendChild(el);
+  }
+  const rem=42-first-daysInMonth;for(let i=1;i<=rem;i++){const el=document.createElement("div");el.className="cal-day other-month";el.textContent=i;grid.appendChild(el);}
+  if(selectedDay)showDayEvents(selectedDay);
+}
+function selectDay(key){selectedDay=key;renderCalendar();showDayEvents(key);}
+function showDayEvents(key){
+  const events=load("events",{});const dayEvents=events[key]||[];const parts=key.split("-");
+  document.getElementById("event-section-title").textContent=new Date(parts[0],parts[1]-1,parts[2]).toLocaleDateString("en",{weekday:"long",month:"long",day:"numeric"});
+  document.getElementById("event-input-row").style.display="flex";
+  const list=document.getElementById("event-list");list.innerHTML="";
+  if(!dayEvents.length){list.innerHTML='<div class="no-events">No events. Add one above.</div>';return;}
+  dayEvents.forEach((ev,i)=>{
+    const el=document.createElement("div");el.className="event-item";
+    const dot=document.createElement("div");dot.className="event-dot";
+    const inf=document.createElement("div");inf.className="event-info";
+    inf.innerHTML='<div class="event-name">'+ev.name+'</div>'+(ev.time?'<div class="event-time">'+ev.time+'</div>':"");
+    const rm=document.createElement("button");rm.className="event-rm";rm.textContent="✕";rm.onclick=()=>deleteEvent(key,i);
+    el.appendChild(dot);el.appendChild(inf);el.appendChild(rm);list.appendChild(el);
+  });
+}
+function addEvent(){const name=document.getElementById("event-input").value.trim();const time=document.getElementById("event-time").value.trim();if(!name||!selectedDay)return;const events=load("events",{});if(!events[selectedDay])events[selectedDay]=[];events[selectedDay].push({name,time});store("events",events);document.getElementById("event-input").value="";document.getElementById("event-time").value="";renderCalendar();}
+function deleteEvent(key,i){const events=load("events",{});events[key].splice(i,1);if(!events[key].length)delete events[key];store("events",events);renderCalendar();}
+
+// MIND MAP
+let mmNodes=[],mmEdges=[],mmSelected=null,mmConnecting=null,mmDragging=null,mmDragOffset={x:0,y:0};
+const COLORS=["#e6a817","#8b949e","#4ade80","#38bdf8","#f472b6","#fb923c","#a78bfa"];
+let mmInited=false;
+function initMindMap(){
+  const canvas=document.getElementById("mm-canvas");const wrap=canvas.parentElement;
+  canvas.width=wrap.clientWidth;canvas.height=wrap.clientHeight;
+  if(!mmInited){mmNodes=load("mm_nodes",[]);mmEdges=load("mm_edges",[]);mmInited=true;}
+  if(!mmNodes.length){mmNodes=[{id:1,x:canvas.width/2,y:canvas.height/2,label:"Main Idea",color:COLORS[0]}];store("mm_nodes",mmNodes);}
+  drawMM();
+  canvas.onpointerdown=mmPointerDown;canvas.onpointermove=mmPointerMove;canvas.onpointerup=mmPointerUp;
+}
+function addNode(){const label=document.getElementById("mm-input").value.trim();if(!label)return;const c=document.getElementById("mm-canvas");const angle=Math.random()*Math.PI*2;const r=80+Math.random()*60;const base=mmSelected?mmNodes.find(n=>n.id===mmSelected):mmNodes[0];const cx=base?base.x:c.width/2;const cy=base?base.y:c.height/2;const id=Date.now();mmNodes.push({id,x:cx+Math.cos(angle)*r,y:cy+Math.sin(angle)*r,label,color:COLORS[mmNodes.length%COLORS.length]});if(mmSelected)mmEdges.push({from:mmSelected,to:id});store("mm_nodes",mmNodes);store("mm_edges",mmEdges);document.getElementById("mm-input").value="";drawMM();}
+function mmConnect(){if(!mmSelected){showStatus("mm","Tap a node first, then Connect","info");document.getElementById("st-mm").className="status show info";return;}mmConnecting=mmSelected;showStatus("mm","Now tap another node to connect","info");document.getElementById("st-mm").className="status show info";}
+function mmClear(){mmNodes=[];mmEdges=[];mmSelected=null;mmConnecting=null;store("mm_nodes",[]);store("mm_edges",[]);const c=document.getElementById("mm-canvas");mmNodes=[{id:1,x:c.width/2,y:c.height/2,label:"Main Idea",color:COLORS[0]}];store("mm_nodes",mmNodes);drawMM();document.getElementById("st-mm").className="status";}
+function mmExport(){const c=document.getElementById("mm-canvas");const a=document.createElement("a");a.download="mindmap.png";a.href=c.toDataURL();a.click();}
+function getNode(x,y){return mmNodes.find(n=>Math.hypot(n.x-x,n.y-y)<28);}
+function mmPointerDown(e){const rect=e.target.getBoundingClientRect();const x=e.clientX-rect.left,y=e.clientY-rect.top;const node=getNode(x,y);if(node){if(mmConnecting&&mmConnecting!==node.id){const exists=mmEdges.some(e=>(e.from===mmConnecting&&e.to===node.id)||(e.from===node.id&&e.to===mmConnecting));if(!exists)mmEdges.push({from:mmConnecting,to:node.id});store("mm_edges",mmEdges);mmConnecting=null;document.getElementById("st-mm").className="status";}else{mmSelected=node.id;mmDragging=node;mmDragOffset={x:x-node.x,y:y-node.y};}drawMM();}else{mmSelected=null;mmConnecting=null;document.getElementById("st-mm").className="status";drawMM();}}
+function mmPointerMove(e){if(!mmDragging)return;const rect=e.target.getBoundingClientRect();mmDragging.x=e.clientX-rect.left-mmDragOffset.x;mmDragging.y=e.clientY-rect.top-mmDragOffset.y;drawMM();}
+function mmPointerUp(){if(mmDragging)store("mm_nodes",mmNodes);mmDragging=null;}
+function drawMM(){const c=document.getElementById("mm-canvas");const ctx=c.getContext("2d");ctx.clearRect(0,0,c.width,c.height);ctx.strokeStyle="rgba(139,148,158,.35)";ctx.lineWidth=2;mmEdges.forEach(e=>{const f=mmNodes.find(n=>n.id===e.from),t=mmNodes.find(n=>n.id===e.to);if(!f||!t)return;ctx.beginPath();ctx.moveTo(f.x,f.y);ctx.lineTo(t.x,t.y);ctx.stroke();});mmNodes.forEach(n=>{const sel=n.id===mmSelected;ctx.beginPath();ctx.arc(n.x,n.y,sel?30:24,0,Math.PI*2);ctx.fillStyle=n.color+(sel?"":"99");ctx.fill();if(sel){ctx.strokeStyle=n.color;ctx.lineWidth=2;ctx.stroke();}ctx.fillStyle="#fff";ctx.font="bold "+(n.label.length>8?10:12)+"px DM Sans,sans-serif";ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillText(n.label.length>10?n.label.substring(0,9)+"..":n.label,n.x,n.y);});}
+
+
+// ══════════════════════════════════════
+// MEDIA STUDIO
+// ══════════════════════════════════════
+
+// Track selected options per row
+const mediaOpts = {};
+function setOpt(rowId, btn, value) {
+  document.getElementById(rowId).querySelectorAll('.media-opt-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  mediaOpts[rowId] = value;
+}
+// Init defaults
+mediaOpts['video-format-row'] = 'mp4';
+mediaOpts['video-quality-row'] = '720p';
+mediaOpts['video-sub-row'] = 'none';
+mediaOpts['audio-format-row'] = 'mp3';
+mediaOpts['audio-quality-row'] = '192k';
+mediaOpts['webcap-type-row'] = 'all';
+
+// URL count display
+function setupUrlCounter(textareaId, countId) {
+  const ta = document.getElementById(textareaId);
+  const ct = document.getElementById(countId);
+  if (!ta || !ct) return;
+  const update = () => {
+    const urls = ta.value.split('\n').map(u => u.trim()).filter(u => u.length > 0);
+    ct.textContent = urls.length + (urls.length === 1 ? ' URL' : ' URLs');
+  };
+  ta.addEventListener('input', update);
+}
+setupUrlCounter('video-urls', 'video-url-count');
+setupUrlCounter('audio-urls', 'audio-url-count');
+
+// Queue state
+let downloadQueue = load('dl_queue', []);
+let dlHistory = load('dl_history', []);
+
+function addToQueue(type) {
+  const taId = type === 'video' ? 'video-urls' : 'audio-urls';
+  const ta = document.getElementById(taId);
+  const urls = ta.value.split('\n').map(u => u.trim()).filter(u => u.length > 4 && u.startsWith('http'));
+
+  if (!urls.length) {
+    showStatus(type === 'video' ? 'video-dl' : 'audio-dl', 'Paste at least one valid URL first', 'err');
+    return;
+  }
+
+  const format = type === 'video'
+    ? mediaOpts['video-format-row']
+    : mediaOpts['audio-format-row'];
+  const quality = type === 'video'
+    ? mediaOpts['video-quality-row']
+    : mediaOpts['audio-quality-row'];
+  const subs = type === 'video' ? mediaOpts['video-sub-row'] : null;
+
+  urls.forEach(url => {
+    downloadQueue.push({
+      id: Date.now() + Math.random(),
+      url,
+      type,
+      format,
+      quality,
+      subs,
+      status: 'pending',
+      progress: 0,
+      addedAt: new Date().toLocaleTimeString(),
+    });
+  });
+
+  store('dl_queue', downloadQueue);
+  ta.value = '';
+  document.getElementById(type === 'video' ? 'video-url-count' : 'audio-url-count').textContent = '0 URLs';
+  updateQueueBadge();
+  showStatus(type === 'video' ? 'video-dl' : 'audio-dl', urls.length + ' item' + (urls.length > 1 ? 's' : '') + ' added to queue', 'ok');
+}
+
+function updateQueueBadge() {
+  const pending = downloadQueue.filter(i => i.status === 'pending' || i.status === 'downloading').length;
+  const badge = document.getElementById('queue-badge');
+  if (badge) {
+    badge.style.display = pending > 0 ? 'inline-block' : 'none';
+    badge.textContent = pending;
+  }
+}
+updateQueueBadge();
+
+function renderQueue() {
+  downloadQueue = load('dl_queue', []);
+  const list = document.getElementById('queue-list');
+  if (!list) return;
+  list.innerHTML = '';
+
+  if (!downloadQueue.length) {
+    list.innerHTML = '<div class="empty-state"><div class="empty-icon">&#128203;</div><div class="empty-text">Queue is empty. Add URLs from Video or Audio Downloader.</div></div>';
+    return;
+  }
+
+  downloadQueue.forEach((item, idx) => {
+    const d = document.createElement('div');
+    d.className = 'queue-item ' + item.status;
+
+    const statusIcon = item.status === 'done' ? '&#10003;' : item.status === 'error' ? '&#10005;' : item.status === 'downloading' ? '&#9660;' : '&#9679;';
+    const statusLabel = item.status === 'done' ? 'Done' : item.status === 'error' ? 'Failed' : item.status === 'downloading' ? 'Downloading...' : 'Pending';
+    const typeIcon = item.type === 'audio' ? '&#127925;' : '&#9654;&#65039;';
+
+    const shortUrl = item.url.length > 45 ? item.url.substring(0, 42) + '...' : item.url;
+
+    d.innerHTML =
+      '<div class="qi-top">' +
+        '<div class="qi-icon">' + typeIcon + '</div>' +
+        '<div class="qi-info">' +
+          '<div class="qi-url">' + shortUrl + '</div>' +
+          '<div class="qi-meta">' +
+            '<span class="qi-tag">' + item.format.toUpperCase() + '</span>' +
+            '<span class="qi-tag">' + item.quality + '</span>' +
+            (item.subs && item.subs !== 'none' ? '<span class="qi-tag">Subs: ' + item.subs + '</span>' : '') +
+            '<span class="qi-tag">Added ' + item.addedAt + '</span>' +
+          '</div>' +
+        '</div>' +
+        '<div class="qi-status ' + item.status + '">' + statusLabel + '</div>' +
+      '</div>' +
+      '<div class="qi-progress"><div class="qi-prog-fill" style="width:' + item.progress + '%"></div></div>' +
+      '<div class="qi-actions"></div>';
+
+    const actions = d.querySelector('.qi-actions');
+
+    if (item.status === 'pending') {
+      const simulateBtn = document.createElement('button');
+      simulateBtn.className = 'qi-action-btn';
+      simulateBtn.textContent = '&#9654; Simulate';
+      simulateBtn.onclick = () => simulateDownload(item.id);
+      actions.appendChild(simulateBtn);
+    }
+
+    if (item.status === 'done' || item.status === 'error') {
+      const retryBtn = document.createElement('button');
+      retryBtn.className = 'qi-action-btn';
+      retryBtn.textContent = item.status === 'done' ? '&#128257; Re-download' : '&#8635; Retry';
+      retryBtn.onclick = () => { item.status = 'pending'; item.progress = 0; store('dl_queue', downloadQueue); renderQueue(); };
+      actions.appendChild(retryBtn);
+    }
+
+    const rmBtn = document.createElement('button');
+    rmBtn.className = 'qi-action-btn danger';
+    rmBtn.textContent = '&#128465; Remove';
+    rmBtn.onclick = () => removeQueueItem(item.id);
+    actions.appendChild(rmBtn);
+
+    list.appendChild(d);
+  });
+}
+
+function simulateDownload(id) {
+  const item = downloadQueue.find(i => i.id === id);
+  if (!item) return;
+  item.status = 'downloading';
+  item.progress = 0;
+  store('dl_queue', downloadQueue);
+  renderQueue();
+
+  // Try real backend first (works in native app via WebView bridge)
+  const backendUrl = load('backend_url', '') || (window.BACKEND_URL || '');
+
+  if (backendUrl || window.BACKEND_URL) {
+    const url = backendUrl || window.BACKEND_URL;
+    const endpoint = item.type === 'audio' ? '/download/audio' : '/download/video';
+    const body = item.type === 'audio'
+      ? { url: item.url, format: item.format || 'mp3' }
+      : { url: item.url, format: item.format || 'mp4', quality: item.quality || '720p' };
+
+    // Animate progress while downloading
+    let prog = 0;
+    const fakeProgress = setInterval(() => {
+      prog += Math.random() * 8 + 2;
+      if (prog < 90) {
+        item.progress = Math.round(prog);
+        store('dl_queue', downloadQueue);
+        renderQueue();
+      }
+    }, 500);
+
+    fetch(url + endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    })
+    .then(r => r.json())
+    .then(data => {
+      clearInterval(fakeProgress);
+      if (data.error) throw new Error(data.error);
+      item.progress = 100;
+      item.status = 'done';
+      item.title = data.title || item.url;
+      store('dl_queue', downloadQueue);
+      dlHistory.unshift({ ...item, completedAt: new Date().toLocaleString() });
+      store('dl_history', dlHistory);
+      updateQueueBadge();
+      renderQueue();
+      toast('✅ Downloaded: ' + (data.title || 'Done!'));
+    })
+    .catch(err => {
+      clearInterval(fakeProgress);
+      item.status = 'error';
+      item.progress = 0;
+      store('dl_queue', downloadQueue);
+      renderQueue();
+      toast('❌ Error: ' + err.message);
+    });
+    return;
+  }
+
+  // Fallback: simulate download if no backend connected
+  let prog = 0;
+  const interval = setInterval(() => {
+    prog += Math.random() * 18 + 5;
+    if (prog >= 100) {
+      prog = 100;
+      item.progress = 100;
+      item.status = 'done';
+      clearInterval(interval);
+      dlHistory.unshift({ ...item, completedAt: new Date().toLocaleString() });
+      store('dl_history', dlHistory);
+      updateQueueBadge();
+    } else {
+      item.progress = Math.round(prog);
+    }
+    store('dl_queue', downloadQueue);
+    renderQueue();
+  }, 400);
+}
+
+function removeQueueItem(id) {
+  downloadQueue = downloadQueue.filter(i => i.id !== id);
+  store('dl_queue', downloadQueue);
+  updateQueueBadge();
+  renderQueue();
+}
+
+function renderHistory() {
+  dlHistory = load('dl_history', []);
+  const list = document.getElementById('history-list');
+  if (!list) return;
+  list.innerHTML = '';
+
+  if (!dlHistory.length) {
+    list.innerHTML = '<div class="empty-state"><div class="empty-icon">&#128336;</div><div class="empty-text">No download history yet.</div></div>';
+    return;
+  }
+
+  dlHistory.forEach((item, idx) => {
+    const d = document.createElement('div');
+    d.className = 'queue-item done';
+    const shortUrl = item.url.length > 45 ? item.url.substring(0, 42) + '...' : item.url;
+    const typeIcon = item.type === 'audio' ? '&#127925;' : '&#9654;&#65039;';
+    d.innerHTML =
+      '<div class="qi-top">' +
+        '<div class="qi-icon">' + typeIcon + '</div>' +
+        '<div class="qi-info">' +
+          '<div class="qi-url">' + shortUrl + '</div>' +
+          '<div class="qi-meta">' +
+            '<span class="qi-tag">' + item.format.toUpperCase() + '</span>' +
+            '<span class="qi-tag">' + item.quality + '</span>' +
+            '<span class="qi-tag">' + (item.completedAt || '') + '</span>' +
+          '</div>' +
+        '</div>' +
+        '<div class="qi-status done">&#10003;</div>' +
+      '</div>' +
+      '<div class="qi-progress"><div class="qi-prog-fill" style="width:100%"></div></div>';
+
+    const actions = document.createElement('div');
+    actions.className = 'qi-actions';
+    const rmBtn = document.createElement('button');
+    rmBtn.className = 'qi-action-btn danger';
+    rmBtn.textContent = '&#128465; Remove';
+    rmBtn.onclick = () => { dlHistory.splice(idx, 1); store('dl_history', dlHistory); renderHistory(); };
+    actions.appendChild(rmBtn);
+    d.appendChild(actions);
+    list.appendChild(d);
+  });
+}
+
+function clearHistory() {
+  dlHistory = [];
+  store('dl_history', []);
+  renderHistory();
+}
+
+// Web Capture
+function scanWebpage() {
+  const url = document.getElementById('webcap-url').value.trim();
+  if (!url || !url.startsWith('http')) {
+    showStatus('webcap', 'Enter a valid webpage URL starting with http', 'err');
+    return;
+  }
+  showStatus('webcap', '&#128269; Scanning... (Backend required for live scan)', 'info');
+
+  // UI simulation — real scan happens via backend after deployment
+  setTimeout(() => {
+    const results = document.getElementById('webcap-results');
+    results.innerHTML = '';
+
+    const mockResults = [
+      { title: 'Detected Video Source', url: url + '#video-src-1', type: 'MP4 Stream', size: 'Unknown' },
+      { title: 'Embedded iFrame', url: url + '#iframe-1', type: 'iframe / embed', size: 'Unknown' },
+    ];
+
+    const notice = document.createElement('div');
+    notice.className = 'media-notice';
+    notice.style.marginTop = '14px';
+    notice.innerHTML = '<span>&#128270;</span><span>Live scanning requires the backend. These are placeholder results — real extraction works after deployment.</span>';
+    results.appendChild(notice);
+
+    mockResults.forEach(r => {
+      const d = document.createElement('div');
+      d.className = 'webcap-result-item';
+      d.innerHTML =
+        '<div class="wcr-top">' +
+          '<div class="wcr-icon">&#127916;</div>' +
+          '<div class="wcr-info">' +
+            '<div class="wcr-title">' + r.title + '</div>' +
+            '<div class="wcr-url">' + r.url + '</div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="wcr-tags">' +
+          '<div class="wcr-tag">' + r.type + '</div>' +
+          '<div class="wcr-tag">Size: ' + r.size + '</div>' +
+        '</div>';
+      const dlBtn = document.createElement('button');
+      dlBtn.className = 'run-btn';
+      dlBtn.style.cssText = 'margin:0;width:100%;padding:12px;font-size:13px';
+      dlBtn.textContent = 'Add to Queue';
+      dlBtn.onclick = () => {
+        downloadQueue.push({
+          id: Date.now() + Math.random(),
+          url: r.url,
+          type: 'video',
+          format: 'mp4',
+          quality: 'best',
+          subs: 'none',
+          status: 'pending',
+          progress: 0,
+          addedAt: new Date().toLocaleTimeString(),
+        });
+        store('dl_queue', downloadQueue);
+        updateQueueBadge();
+        toast('Added to queue');
+      };
+      d.appendChild(dlBtn);
+      results.appendChild(d);
+    });
+
+    showStatus('webcap', '2 potential sources found', 'ok');
+  }, 1200);
+}
+
+
+
+// ══════════════════════════════════════
+// BROWSER
+// ══════════════════════════════════════
+let detectedVideoUrl = null;
+
+// loadBrowser defined below
+
+function browserGoBack() {
+  if (browserHistory.length <= 1) {
+    // Go back to placeholder
+    browserHistory = [];
+    document.getElementById("browser-placeholder").style.display = "flex";
+    document.getElementById("browser-iframe").style.display = "none";
+    document.getElementById("browser-video-bar").style.display = "none";
+    document.getElementById("browser-url").value = "";
+    return;
+  }
+  browserHistory.pop(); // remove current
+  const prev = browserHistory[browserHistory.length - 1];
+  document.getElementById("browser-url").value = prev;
+  document.getElementById("browser-iframe").src = prev;
+}
+
+function quickNav(url) {
+  document.getElementById("browser-url").value = url;
+  loadBrowser();
+}
+
+function reloadBrowser() {
+  const iframe = document.getElementById("browser-iframe");
+  if (iframe.src && iframe.src !== "about:blank") iframe.src = iframe.src;
+}
+
+// ══════════════════════════════════════
+// PROFILE PIC
+// ══════════════════════════════════════
+function changeProfilePic() {
+  document.getElementById("profile-pic-input").click();
+}
+
+function applyProfilePic(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    const dataUrl = ev.target.result;
+    store("profile_pic", dataUrl);
+    renderProfilePic(dataUrl);
+    toast("Profile picture updated");
+  };
+  reader.readAsDataURL(file);
+}
+
+function renderProfilePic(dataUrl) {
+  ["profile-img", "settings-profile-img"].forEach(id => {
+    const img = document.getElementById(id);
+    if (img) { img.src = dataUrl; img.style.display = "block"; }
+  });
+  ["profile-initials", "settings-profile-initials"].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = "none";
+  });
+}
+
+// Load saved profile pic on start
+const savedPic = load("profile_pic", null);
+if (savedPic) renderProfilePic(savedPic);
+
+// ══════════════════════════════════════
+// PIXEL LAB — IMAGE TOOLS
+// ══════════════════════════════════════
+mediaOpts["compress-quality-row"] = "0.80";
+mediaOpts["compress-fmt-row"] = "same";
+mediaOpts["imgconv-fmt-row"] = "jpeg";
+
+let imgCompressFiles = [];
+let imgResizeFile = null;
+let imgCropFile = null;
+let imgConvertFiles = [];
+let cropRatio = null;
+let resizeScale = null;
+
+function handleImgCompress(e) {
+  imgCompressFiles = Array.from(e.target.files);
+  e.target.value = "";
+  const list = document.getElementById("fl-img-compress");
+  list.innerHTML = "";
+  imgCompressFiles.forEach((f, i) => {
+    const d = document.createElement("div"); d.className = "file-item";
+    const icon = document.createElement("span"); icon.className = "fi-icon"; icon.textContent = "🖼️";
+    const name = document.createElement("span"); name.className = "fi-name"; name.textContent = f.name;
+    const size = document.createElement("span"); size.className = "fi-size"; size.textContent = (f.size/1024).toFixed(0) + " KB";
+    d.appendChild(icon); d.appendChild(name); d.appendChild(size);
+    list.appendChild(d);
+  });
+  const btn = document.getElementById("rb-img-compress");
+  btn.disabled = imgCompressFiles.length === 0;
+  btn.textContent = imgCompressFiles.length > 0 ? "Compress " + imgCompressFiles.length + " image" + (imgCompressFiles.length > 1 ? "s" : "") : "Select images first";
+}
+
+async function runImgCompress() {
+  if (!imgCompressFiles.length) return;
+  const quality = parseFloat(mediaOpts["compress-quality-row"] || "0.80");
+  const fmt = mediaOpts["compress-fmt-row"] || "same";
+  showStatus("img-compress", "Compressing...", "info");
+
+  for (const file of imgCompressFiles) {
+    const url = URL.createObjectURL(file);
+    const img = new Image();
+    await new Promise(res => { img.onload = res; img.src = url; });
+    const canvas = document.createElement("canvas");
+    canvas.width = img.width; canvas.height = img.height;
+    canvas.getContext("2d").drawImage(img, 0, 0);
+    const outFmt = fmt === "same" ? (file.type || "image/jpeg") : "image/" + fmt;
+    const ext = outFmt.split("/")[1].replace("jpeg","jpg");
+    const blob = await new Promise(res => canvas.toBlob(res, outFmt, quality));
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = file.name.replace(/\.[^.]+$/, "") + "_compressed." + ext;
+    a.click();
+    URL.revokeObjectURL(url);
+    showStatus("img-compress", "Done! " + (file.size/1024).toFixed(0) + " KB → " + (blob.size/1024).toFixed(0) + " KB", "ok");
+  }
+}
+
+function handleImgResize(e) {
+  imgResizeFile = e.target.files[0];
+  e.target.value = "";
+  if (!imgResizeFile) return;
+  const url = URL.createObjectURL(imgResizeFile);
+  const preview = document.getElementById("resize-img-preview");
+  const wrap = document.getElementById("resize-preview");
+  preview.src = url;
+  preview.onload = () => {
+    wrap.style.display = "block";
+    document.getElementById("resize-info").textContent = preview.naturalWidth + " × " + preview.naturalHeight + " px";
+    document.getElementById("resize-w").placeholder = preview.naturalWidth;
+    document.getElementById("resize-h").placeholder = preview.naturalHeight;
+  };
+  const btn = document.getElementById("rb-img-resize");
+  btn.disabled = false; btn.textContent = "Resize Image";
+}
+
+function setScale(pct) {
+  resizeScale = pct / 100;
+  const preview = document.getElementById("resize-img-preview");
+  if (preview.naturalWidth) {
+    document.getElementById("resize-w").value = Math.round(preview.naturalWidth * resizeScale);
+    document.getElementById("resize-h").value = Math.round(preview.naturalHeight * resizeScale);
+  }
+}
+
+async function runImgResize() {
+  if (!imgResizeFile) return;
+  const img = document.getElementById("resize-img-preview");
+  const w = parseInt(document.getElementById("resize-w").value) || img.naturalWidth;
+  const h = parseInt(document.getElementById("resize-h").value) || Math.round(img.naturalHeight * (w / img.naturalWidth));
+  const canvas = document.createElement("canvas");
+  canvas.width = w; canvas.height = h;
+  canvas.getContext("2d").drawImage(img, 0, 0, w, h);
+  const blob = await new Promise(res => canvas.toBlob(res, imgResizeFile.type || "image/jpeg", 0.92));
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = imgResizeFile.name.replace(/\.[^.]+$/, "") + "_" + w + "x" + h + "." + (imgResizeFile.name.split(".").pop());
+  a.click();
+  showStatus("img-resize", "Resized to " + w + " × " + h + " px", "ok");
+}
+
+function handleImgCrop(e) {
+  imgCropFile = e.target.files[0];
+  e.target.value = "";
+  if (!imgCropFile) return;
+  const url = URL.createObjectURL(imgCropFile);
+  const preview = document.getElementById("crop-img-preview");
+  const wrap = document.getElementById("crop-preview");
+  preview.src = url;
+  preview.onload = () => {
+    wrap.style.display = "block";
+    document.getElementById("crop-info").textContent = preview.naturalWidth + " × " + preview.naturalHeight + " px — set crop area above";
+    document.getElementById("crop-w").placeholder = preview.naturalWidth;
+    document.getElementById("crop-h").placeholder = preview.naturalHeight;
+  };
+  const btn = document.getElementById("rb-img-crop");
+  btn.disabled = false; btn.textContent = "Crop Image";
+}
+
+function setCropRatio(ratio, btn) {
+  cropRatio = ratio;
+  document.getElementById("crop-ratio-row").querySelectorAll(".media-opt-btn").forEach(b => b.classList.remove("active"));
+  btn.classList.add("active");
+  if (ratio && imgCropFile) {
+    const img = document.getElementById("crop-img-preview");
+    const w = img.naturalWidth;
+    document.getElementById("crop-w").value = w;
+    document.getElementById("crop-h").value = Math.round(w / ratio);
+  }
+}
+
+async function runImgCrop() {
+  if (!imgCropFile) return;
+  const img = document.getElementById("crop-img-preview");
+  const x = parseInt(document.getElementById("crop-x").value) || 0;
+  const y = parseInt(document.getElementById("crop-y").value) || 0;
+  const w = parseInt(document.getElementById("crop-w").value) || img.naturalWidth;
+  const h = parseInt(document.getElementById("crop-h").value) || img.naturalHeight;
+  if (x + w > img.naturalWidth || y + h > img.naturalHeight) {
+    showStatus("img-crop", "Crop area exceeds image bounds", "err"); return;
+  }
+  const canvas = document.createElement("canvas");
+  canvas.width = w; canvas.height = h;
+  canvas.getContext("2d").drawImage(img, x, y, w, h, 0, 0, w, h);
+  const blob = await new Promise(res => canvas.toBlob(res, imgCropFile.type || "image/jpeg", 0.95));
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = imgCropFile.name.replace(/\.[^.]+$/, "") + "_cropped." + (imgCropFile.name.split(".").pop());
+  a.click();
+  showStatus("img-crop", "Cropped to " + w + " × " + h + " px", "ok");
+}
+
+function handleImgConvert(e) {
+  imgConvertFiles = Array.from(e.target.files);
+  e.target.value = "";
+  const list = document.getElementById("fl-img-convert");
+  list.innerHTML = "";
+  imgConvertFiles.forEach(f => {
+    const d = document.createElement("div"); d.className = "file-item";
+    const icon = document.createElement("span"); icon.className = "fi-icon"; icon.textContent = "🖼️";
+    const name = document.createElement("span"); name.className = "fi-name"; name.textContent = f.name;
+    const size = document.createElement("span"); size.className = "fi-size"; size.textContent = (f.size/1024).toFixed(0) + " KB";
+    d.appendChild(icon); d.appendChild(name); d.appendChild(size);
+    list.appendChild(d);
+  });
+  const btn = document.getElementById("rb-img-convert");
+  btn.disabled = imgConvertFiles.length === 0;
+  btn.textContent = imgConvertFiles.length > 0 ? "Convert " + imgConvertFiles.length + " image" + (imgConvertFiles.length > 1 ? "s" : "") : "Select images first";
+}
+
+async function runImgConvert() {
+  if (!imgConvertFiles.length) return;
+  const fmt = mediaOpts["imgconv-fmt-row"] || "jpeg";
+  const mime = "image/" + fmt;
+  const ext = fmt === "jpeg" ? "jpg" : fmt;
+  showStatus("img-convert", "Converting...", "info");
+  for (const file of imgConvertFiles) {
+    const url = URL.createObjectURL(file);
+    const img = new Image();
+    await new Promise(res => { img.onload = res; img.src = url; });
+    const canvas = document.createElement("canvas");
+    canvas.width = img.naturalWidth; canvas.height = img.naturalHeight;
+    canvas.getContext("2d").drawImage(img, 0, 0);
+    const blob = await new Promise(res => canvas.toBlob(res, mime, 0.92));
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = file.name.replace(/\.[^.]+$/, "") + "." + ext;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+  showStatus("img-convert", "Converted " + imgConvertFiles.length + " image" + (imgConvertFiles.length > 1 ? "s" : "") + " to " + ext.toUpperCase(), "ok");
+}
+
+
+
+// ══════════════════════════════════════
+// IMAGE ENHANCER
+// ══════════════════════════════════════
+let enhanceImg = null;
+let enhanceOrigData = null;
+
+function handleEnhance(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  e.target.value = "";
+  const url = URL.createObjectURL(file);
+  const img = new Image();
+  img.onload = () => {
+    enhanceImg = img;
+    const canvas = document.getElementById("enhance-canvas");
+    canvas.width = img.naturalWidth;
+    canvas.height = img.naturalHeight;
+    const ctx = canvas.getContext("2d");
+    ctx.drawImage(img, 0, 0);
+    enhanceOrigData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    document.getElementById("enhance-preview-wrap").style.display = "block";
+    document.getElementById("enhance-sliders").style.display = "block";
+    document.getElementById("enhance-dims").textContent = img.naturalWidth + " x " + img.naturalHeight + " px";
+    document.getElementById("enhance-zone").style.display = "none";
+    const btn = document.getElementById("rb-img-enhance");
+    btn.disabled = false; btn.textContent = "Download Enhanced Image";
+    URL.revokeObjectURL(url);
+  };
+  img.src = url;
+}
+
+function applyEnhance() {
+  if (!enhanceImg) return;
+  const brightness = document.getElementById("sl-brightness").value;
+  const contrast = document.getElementById("sl-contrast").value;
+  const saturation = document.getElementById("sl-saturation").value;
+  const sharpness = document.getElementById("sl-sharpness").value;
+  const blur = document.getElementById("sl-blur").value;
+  const hue = document.getElementById("sl-hue").value;
+
+  document.getElementById("val-brightness").textContent = brightness + "%";
+  document.getElementById("val-contrast").textContent = contrast + "%";
+  document.getElementById("val-saturation").textContent = saturation + "%";
+  document.getElementById("val-sharpness").textContent = sharpness;
+  document.getElementById("val-blur").textContent = blur + "px";
+  document.getElementById("val-hue").textContent = hue + "deg";
+
+  const canvas = document.getElementById("enhance-canvas");
+  const ctx = canvas.getContext("2d");
+  ctx.filter = "brightness(" + brightness + "%) contrast(" + contrast + "%) saturate(" + saturation + "%) blur(" + blur + "px) hue-rotate(" + hue + "deg)";
+  ctx.drawImage(enhanceImg, 0, 0);
+  ctx.filter = "none";
+
+  // Simple sharpness via unsharp mask approximation
+  if (parseInt(sharpness) > 0) {
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const data = imageData.data;
+    const amount = parseInt(sharpness) * 0.1;
+    for (let i = 0; i < data.length; i += 4) {
+      data[i] = Math.min(255, data[i] * (1 + amount));
+      data[i+1] = Math.min(255, data[i+1] * (1 + amount));
+      data[i+2] = Math.min(255, data[i+2] * (1 + amount));
+    }
+    ctx.putImageData(imageData, 0, 0);
+  }
+}
+
+function resetEnhance() {
+  ["sl-brightness","sl-contrast","sl-saturation"].forEach(id => document.getElementById(id).value = 100);
+  ["sl-sharpness","sl-blur","sl-hue"].forEach(id => document.getElementById(id).value = 0);
+  applyEnhance();
+}
+
+function downloadEnhanced() {
+  const canvas = document.getElementById("enhance-canvas");
+  canvas.toBlob(blob => {
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "enhanced.jpg";
+    a.click();
+    showStatus("img-enhance", "Enhanced image downloaded", "ok");
+  }, "image/jpeg", 0.95);
+}
+
+// ══════════════════════════════════════
+// VIDEO TO FRAMES
+// ══════════════════════════════════════
+mediaOpts["frames-fps-row"] = "1";
+mediaOpts["frames-fmt-row"] = "image/png";
+let vidFramesFile = null;
+let extractedFrames = [];
+
+function handleVidFrames(e) {
+  vidFramesFile = e.target.files[0];
+  if (!vidFramesFile) return;
+  e.target.value = "";
+  const url = URL.createObjectURL(vidFramesFile);
+  const player = document.getElementById("vid-frames-player");
+  player.src = url;
+  document.getElementById("vid-frames-preview").style.display = "block";
+  player.onloadedmetadata = () => {
+    const dur = Math.round(player.duration);
+    const mins = Math.floor(dur/60);
+    const secs = dur % 60;
+    document.getElementById("vid-frames-info").textContent =
+      vidFramesFile.name + " — " + mins + "m " + secs + "s — " + Math.round(player.videoWidth) + "x" + Math.round(player.videoHeight);
+    const btn = document.getElementById("rb-vid-frames");
+    btn.disabled = false;
+    btn.textContent = "Extract Frames";
+  };
+}
+
+async function runVidFrames() {
+  if (!vidFramesFile) return;
+  const player = document.getElementById("vid-frames-player");
+  const fpsOpt = mediaOpts["frames-fps-row"] || "1";
+  const fmt = mediaOpts["frames-fmt-row"] || "image/png";
+  const ext = fmt === "image/jpeg" ? "jpg" : fmt === "image/webp" ? "webp" : "png";
+  const duration = player.duration;
+  const fps = fpsOpt === "all" ? 24 : parseFloat(fpsOpt);
+  const interval = 1 / fps;
+  const totalFrames = fpsOpt === "all" ? Math.min(Math.round(duration * 24), 200) : Math.floor(duration * fps);
+
+  const grid = document.getElementById("frames-grid");
+  grid.innerHTML = "";
+  extractedFrames = [];
+
+  document.getElementById("pw-vid-frames").classList.add("show");
+  document.getElementById("rb-vid-frames").disabled = true;
+
+  const canvas = document.createElement("canvas");
+  canvas.width = player.videoWidth;
+  canvas.height = player.videoHeight;
+  const ctx = canvas.getContext("2d");
+
+  for (let i = 0; i < totalFrames; i++) {
+    const time = i * interval;
+    if (time > duration) break;
+
+    await new Promise(res => {
+      player.currentTime = time;
+      player.onseeked = res;
+    });
+
+    ctx.drawImage(player, 0, 0, canvas.width, canvas.height);
+    const pct = Math.round((i / totalFrames) * 100);
+    document.getElementById("pf-vid-frames").style.width = pct + "%";
+    document.getElementById("pp-vid-frames").textContent = pct + "%";
+    document.getElementById("pt-vid-frames").textContent = "Frame " + (i+1) + " of " + totalFrames;
+
+    const dataUrl = canvas.toDataURL(fmt, 0.92);
+    extractedFrames.push({ dataUrl, time: time.toFixed(2), ext });
+
+    // Show thumbnail
+    const thumb = document.createElement("div");
+    thumb.className = "frame-thumb";
+    const img = document.createElement("img");
+    img.src = dataUrl;
+    const label = document.createElement("div");
+    label.className = "frame-thumb-label";
+    label.textContent = time.toFixed(1) + "s";
+    const dlBtn = document.createElement("button");
+    dlBtn.className = "frame-thumb-dl";
+    dlBtn.textContent = "↓";
+    dlBtn.onclick = () => {
+      const a = document.createElement("a");
+      a.href = dataUrl;
+      a.download = "frame_" + time.toFixed(2).replace(".", "s") + "." + ext;
+      a.click();
+    };
+    thumb.appendChild(img);
+    thumb.appendChild(label);
+    thumb.appendChild(dlBtn);
+    grid.appendChild(thumb);
+
+    // Small delay to keep UI responsive
+    if (i % 5 === 0) await new Promise(res => setTimeout(res, 10));
+  }
+
+  document.getElementById("pf-vid-frames").style.width = "100%";
+  document.getElementById("pp-vid-frames").textContent = "100%";
+  document.getElementById("pt-vid-frames").textContent = "Done!";
+  setTimeout(() => document.getElementById("pw-vid-frames").classList.remove("show"), 1500);
+  showStatus("vid-frames", extractedFrames.length + " frames extracted — tap any to download individually", "ok");
+  document.getElementById("rb-vid-frames").disabled = false;
+  document.getElementById("rb-vid-frames").textContent = "Download All as ZIP";
+  document.getElementById("rb-vid-frames").onclick = downloadAllFrames;
+}
+
+async function downloadAllFrames() {
+  if (!extractedFrames.length) return;
+  showStatus("vid-frames", "Downloading " + extractedFrames.length + " frames individually...", "info");
+  for (let i = 0; i < extractedFrames.length; i++) {
+    const f = extractedFrames[i];
+    const a = document.createElement("a");
+    a.href = f.dataUrl;
+    a.download = "frame_" + String(i+1).padStart(4,"0") + "_" + f.time.replace(".","s") + "." + f.ext;
+    a.click();
+    await new Promise(res => setTimeout(res, 100));
+  }
+  showStatus("vid-frames", "All " + extractedFrames.length + " frames downloaded", "ok");
+}
+
+// ── BACKEND CONFIG ──────────────────────────────────────────────
+function setBackendUrl() {
+  const current = load('backend_url', '') || '';
+  const url = prompt('Enter your backend URL:\n(e.g. http://127.0.0.1:5000 for Termux\nor https://your-app.render.com for cloud)', current);
+  if (url === null) return;
+  const clean = url.trim().replace(/\/$/, '');
+  store('backend_url', clean);
+  const el = document.getElementById('backend-url-display');
+  if (el) el.textContent = clean || 'Not set — tap to configure';
+  if (clean) pingBackend(clean);
+  else toast('Backend URL cleared');
+}
+
+function pingBackend(url) {
+  const statusEl = document.getElementById('backend-status');
+  fetch((url || load('backend_url', '')) + '/')
+    .then(r => r.json())
+    .then(d => {
+      if (statusEl) statusEl.style.color = '#4ade80';
+      toast('✅ Backend connected!');
+    })
+    .catch(() => {
+      if (statusEl) statusEl.style.color = 'var(--red)';
+    });
+}
+
+(function(){
+  const url = load('backend_url', '');
+  if (url) {
+    setTimeout(() => {
+      const el = document.getElementById('backend-url-display');
+      if (el) el.textContent = url;
+      pingBackend(url);
+    }, 2000);
+  }
+  if (window.BACKEND_URL && !url) {
+    store('backend_url', window.BACKEND_URL);
+    setTimeout(() => pingBackend(window.BACKEND_URL), 1500);
+  }
+})();
+
+</script>
+</body>
+</html>
